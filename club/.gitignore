@@ -1,0 +1,23 @@
+*.class
+bin/
+build/
+
+.gradle
+/.classpath
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+### IDEA ###
+/.idea
+/out/
+/**/out/
+*.iml
+
+/.jpb
