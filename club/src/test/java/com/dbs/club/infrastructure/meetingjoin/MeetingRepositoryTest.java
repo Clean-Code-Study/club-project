@@ -1,6 +1,8 @@
 package com.dbs.club.infrastructure.meetingjoin;
 
+import com.dbs.club.domain.common.MeetingState;
 import com.dbs.club.domain.common.RegisterDeleteState;
+import com.dbs.club.domain.meeting.Meeting;
 import com.dbs.club.domain.meetingjoin.MeetingJoin;
 import com.dbs.club.domain.member.Member;
 import com.dbs.club.domain.member.MemberGenderType;
@@ -26,9 +28,8 @@ public class MeetingRepositoryTest {
                 "testNickname", LocalDate.of(2000, 1, 1), MemberGenderType.FEMALE,
                 "testInterest", RegisterDeleteState.REGISTERED);
 
-//        Meeting meeting = Meeting.init("test", "testTitle", "testContent", "testLocation", LocalDate.of(2000,1,1), 100, 0, MeetingState.OPEN);
-// 아래 매개변수에 meeting 추가
-        MeetingJoin saveMeetingJoin = MeetingJoin.init(member, RegisterDeleteState.REGISTERED);
+        Meeting meeting = Meeting.init(member, "testTitle", "testContent", "testLocation", LocalDate.of(2000,1,1), 100, 0, MeetingState.OPEN);
+        MeetingJoin saveMeetingJoin = MeetingJoin.init(member, meeting, RegisterDeleteState.REGISTERED);
 
         MeetingJoin meetingJoin = meetingJoinRepository.save(saveMeetingJoin);
         assertThat(meetingJoin.getId()).isNotNull();
