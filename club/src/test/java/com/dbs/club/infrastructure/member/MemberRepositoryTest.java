@@ -29,5 +29,4 @@ class MemberRepositoryTest {
         Member member = memberRepository.save(saveMember);
         assertThat(member.getId()).isNotNull();
     }
-
 }

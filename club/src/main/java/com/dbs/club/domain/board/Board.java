@@ -18,7 +18,7 @@ public class Board extends BaseEntity {
     private Long id;
 
     @ManyToOne(cascade = CascadeType.REMOVE)
-    @JoinColumn( name = "member_id", referencedColumnName = "id")
+    @JoinColumn(name = "member_id", referencedColumnName = "id")
     private Member member;
 
     @Column(name = "title", nullable = false, length = 30)
@@ -30,25 +30,15 @@ public class Board extends BaseEntity {
     @Column(name = "status", nullable = false, length = 30)
     private RegisterDeleteState status;
 
-
     //생성자
     public Board(Member member, String title, String content, RegisterDeleteState status) {
-
         this.member = member;
-
         this.title = title;
-
         this.content = content;
-
         this.status = status;
     }
 
-    //초기화 메소드
     public static Board init(Member member, String title, String content, RegisterDeleteState status) {
-
-        return new Board(member,title,content,status);
+        return new Board(member, title, content, status);
     }
-
-
-
 }
