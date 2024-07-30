@@ -23,10 +23,11 @@ public class MeetingRepositoryTest {
     @Test
     void saveTest() {
         Member member = Member.init("testId", "1234", "testName", "01011112222",
-                "testNickname", LocalDate.of(2000,1,1), MemberGenderType.FEMALE,
+                "testNickname", LocalDate.of(2000, 1, 1), MemberGenderType.FEMALE,
                 "testInterest", RegisterDeleteState.REGISTERED);
 
-
+//        Meeting meeting = Meeting.init("test", "testTitle", "testContent", "testLocation", LocalDate.of(2000,1,1), 100, 0, MeetingState.OPEN);
+// 아래 매개변수에 meeting 추가
         MeetingJoin saveMeetingJoin = MeetingJoin.init(member, RegisterDeleteState.REGISTERED);
 
         MeetingJoin meetingJoin = meetingJoinRepository.save(saveMeetingJoin);
