@@ -1,6 +1,6 @@
 *.class
 bin/
-build/
+club/build/
 
 .gradle
 /.classpath
