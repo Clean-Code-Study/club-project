@@ -11,11 +11,15 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Getter
+@Builder
+@AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Getter
 @Entity
 public class Member extends BaseEntity {
 
@@ -50,21 +54,4 @@ public class Member extends BaseEntity {
     @Column(name = "status", nullable = false, length = 30)
     private RegisterDeleteState status;
 
-    public Member(String loginId, String password, String name, String contact, String nickname, LocalDate birth,
-        MemberGenderType gender, String interest, RegisterDeleteState status) {
-        this.loginId = loginId;
-        this.password = password;
-        this.name = name;
-        this.contact = contact;
-        this.nickname = nickname;
-        this.birth = birth;
-        this.gender = gender;
-        this.interest = interest;
-        this.status = status;
-    }
-
-    public static Member init(String loginId, String password, String name, String contact, String nickname,
-        LocalDate birth, MemberGenderType gender, String interest, RegisterDeleteState status) {
-        return new Member(loginId, password, name, contact, nickname, birth, gender, interest, status);
-    }
 }
