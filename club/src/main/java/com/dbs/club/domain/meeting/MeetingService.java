@@ -19,11 +19,8 @@ public class MeetingService {
     }
 
     public Meeting saveMeeting() {
-        Member member = Member.init("testId", "1234", "testName", "01011112222",
-                "testNickname", LocalDate.of(2000,1,1), MemberGenderType.FEMALE,
-                "testInterest", RegisterDeleteState.REGISTERED);
 
-        Meeting meeting = Meeting.init(member, "testTitle", "testContent", "testLocation",
+        Meeting meeting = Meeting.init(null, "testTitle", "testContent", "testLocation",
                 LocalDate.of(2000, 1, 1), 100, 0, MeetingState.OPEN);
         return meetingRepository.save(meeting);
     }
