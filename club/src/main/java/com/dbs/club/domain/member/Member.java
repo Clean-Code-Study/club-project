@@ -5,11 +5,7 @@ import java.time.LocalDate;
 import com.dbs.club.domain.common.BaseEntity;
 import com.dbs.club.domain.common.RegisterDeleteState;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -42,12 +38,14 @@ public class Member extends BaseEntity {
     private LocalDate birth;
 
     @Column(name = "gender", length = 10)
+    @Enumerated(EnumType.STRING)
     private MemberGenderType gender;
 
     @Column(name = "interest", length = 50)
     private String interest;
 
     @Column(name = "status", nullable = false, length = 30)
+    @Enumerated(EnumType.STRING)
     private RegisterDeleteState status;
 
     public Member(String loginId, String password, String name, String contact, String nickname, LocalDate birth,

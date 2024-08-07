@@ -41,6 +41,7 @@ public class Meeting extends BaseEntity {
     private int joinCount;
 
     @Column(name = "status", nullable = false, length = 30)
+    @Enumerated(EnumType.STRING)
     private MeetingState status;
 
     public Meeting(Member member, String title, String content, String location, LocalDate date, int joinLimit, int joinCount, MeetingState status) {
