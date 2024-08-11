@@ -7,6 +7,8 @@ import com.dbs.club.domain.common.RegisterDeleteState;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -48,12 +50,14 @@ public class Member extends BaseEntity {
     @Column(name = "birth", nullable = false)
     private LocalDate birth;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "gender", nullable = false, length = 10)
     private MemberGenderType gender;
 
     @Column(name = "interest", length = 50)
     private String interest;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false, length = 30)
     private RegisterDeleteState status;
 
