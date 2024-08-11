@@ -23,6 +23,9 @@ import lombok.NoArgsConstructor;
 @Entity
 public class Member extends BaseEntity {
 
+    public static final String LOGIN_ID_REGEX = "^[a-zA-Z0-9]{5,}$";
+    public static final String PASSWORD_REGEX = "^(?=.*[a-zA-Z])(?=.*\\d)(?=.*[!@#$%^&*])[A-Za-z\\d!@#$%^&*]{8,}$";
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -42,10 +45,10 @@ public class Member extends BaseEntity {
     @Column(name = "nickname", nullable = false, length = 30)
     private String nickname;
 
-    @Column(name = "birth")
+    @Column(name = "birth", nullable = false)
     private LocalDate birth;
 
-    @Column(name = "gender", length = 10)
+    @Column(name = "gender", nullable = false, length = 10)
     private MemberGenderType gender;
 
     @Column(name = "interest", length = 50)

@@ -7,13 +7,16 @@ import com.dbs.club.domain.member.Member;
 import com.dbs.club.domain.member.MemberGenderType;
 
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 
 public class MemberRequestDto {
 
     public record Create(
+        @Pattern(regexp = Member.LOGIN_ID_REGEX, message = "아이디는 5자리 이상 영문 소문자와 숫자만 가능합니다.")
         @NotNull(message = "로그인 아이디는 필수입니다.")
         String loginId,
 
+        @Pattern(regexp = Member.PASSWORD_REGEX, message = "비밀번호는 8자리 이상 영문 소문자와 숫자, 특수문자를 포함해야 합니다.")
         @NotNull(message = "비밀번호는 필수입니다.")
         String password,
 

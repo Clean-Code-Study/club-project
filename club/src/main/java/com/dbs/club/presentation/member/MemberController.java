@@ -13,6 +13,10 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import com.dbs.club.domain.member.MemberService;
 
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+
+@RequiredArgsConstructor
 @RequestMapping(ROOT_URL)
 @RestController
 public class MemberController {
@@ -20,12 +24,8 @@ public class MemberController {
     static final String ROOT_URL = "/api/members";
     private final MemberService memberService;
 
-    public MemberController(MemberService memberService) {
-        this.memberService = memberService;
-    }
-
     @PostMapping
-    public ResponseEntity<Void> createMember(@RequestBody MemberRequestDto.Create create) {
+    public ResponseEntity<Void> createMember(@Valid @RequestBody MemberRequestDto.Create create) {
         long memberId = memberService.createMember(create);
 
         URI locationUri = UriComponentsBuilder.fromPath(ROOT_URL)
