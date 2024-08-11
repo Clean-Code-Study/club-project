@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.dbs.club.domain.common.exception.ErrorCode;
+import com.dbs.club.domain.member.exception.MemberException;
 import com.dbs.club.infrastructure.member.MemberRepository;
 import com.dbs.club.presentation.member.MemberRequestDto;
 
@@ -41,4 +42,11 @@ public class MemberService {
                 throw new MemberException(ErrorCode.MEMBER_NICKNAME_DUPLICATE);
             });
     }
+
+    public Member getMember(Long memberId) {
+        Member findMember = memberRepository.findById(memberId)
+            .orElseThrow(() -> new MemberException(ErrorCode.MEMBER_NOT_FOUND));
+        return findMember;
+    }
+
 }

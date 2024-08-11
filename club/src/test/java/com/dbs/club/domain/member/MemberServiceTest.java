@@ -13,6 +13,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import com.dbs.club.domain.common.RegisterDeleteState;
+import com.dbs.club.domain.member.exception.MemberException;
 import com.dbs.club.infrastructure.member.MemberRepository;
 import com.dbs.club.presentation.member.MemberRequestDto;
 
