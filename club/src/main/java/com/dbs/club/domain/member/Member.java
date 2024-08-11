@@ -17,7 +17,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Builder
-@AllArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Entity
@@ -57,4 +57,16 @@ public class Member extends BaseEntity {
     @Column(name = "status", nullable = false, length = 30)
     private RegisterDeleteState status;
 
+    public Member(String loginId, String password, String name, String contact, String nickname, LocalDate birth,
+        MemberGenderType gender, String interest, RegisterDeleteState status) {
+        this.loginId = loginId;
+        this.password = password;
+        this.name = name;
+        this.contact = contact;
+        this.nickname = nickname;
+        this.birth = birth;
+        this.gender = gender;
+        this.interest = interest;
+        this.status = status;
+    }
 }
