@@ -1,6 +1,7 @@
 package com.dbs.club.domain.member;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.dbs.club.domain.common.exception.ErrorCode;
 import com.dbs.club.infrastructure.member.MemberRepository;
@@ -14,6 +15,7 @@ public class MemberService {
 
     private final MemberRepository memberRepository;
 
+    @Transactional
     public long createMember(MemberRequestDto.Create create) {
         Member member = create.toEntity();
         validateDuplicateMember(member);
