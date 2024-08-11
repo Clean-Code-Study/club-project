@@ -1,6 +1,7 @@
 package com.dbs.club.presentation.board;
 
 import com.dbs.club.domain.board.BoardService;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -24,7 +25,7 @@ public class BoardController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> createBoard(@RequestBody BoardRequestDto.Create create) {
+    public ResponseEntity<Void> createBoard(@Valid @RequestBody BoardRequestDto.Create create) {
         long boardId = boardService.createBoard(create);
 
         URI locationUri = UriComponentsBuilder.fromPath(ROOT_URL)
