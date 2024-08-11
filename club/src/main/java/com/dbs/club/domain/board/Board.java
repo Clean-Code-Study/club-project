@@ -4,12 +4,12 @@ import com.dbs.club.domain.common.BaseEntity;
 import com.dbs.club.domain.common.RegisterDeleteState;
 import com.dbs.club.domain.member.Member;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-@Getter
+@Builder
+@AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Getter
 @Entity
 public class Board extends BaseEntity {
 
@@ -18,7 +18,7 @@ public class Board extends BaseEntity {
     private Long id;
 
     @ManyToOne(cascade = CascadeType.REMOVE)
-    @JoinColumn(name = "member_id", referencedColumnName = "id")
+    @JoinColumn(name = "memberId", referencedColumnName = "id")
     private Member member;
 
     @Column(name = "title", nullable = false, length = 30)
@@ -28,17 +28,7 @@ public class Board extends BaseEntity {
     private String content;
 
     @Column(name = "status", nullable = false, length = 30)
+    @Enumerated(EnumType.STRING)
     private RegisterDeleteState status;
 
-    //생성자
-    public Board(Member member, String title, String content, RegisterDeleteState status) {
-        this.member = member;
-        this.title = title;
-        this.content = content;
-        this.status = status;
-    }
-
-    public static Board init(Member member, String title, String content, RegisterDeleteState status) {
-        return new Board(member, title, content, status);
-    }
 }
