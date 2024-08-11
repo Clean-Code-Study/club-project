@@ -14,27 +14,27 @@ public class ErrorResponse {
     private final int status;
     private final String message;
     private final String code;
-    private final List<String> detailedMessage;
+    private final List<String> detailMessage;
 
     public ErrorResponse(ErrorCode errorCode) {
         this.status = errorCode.getStatus().value();
         this.message = errorCode.getMessage();
         this.code = errorCode.toString();
-        this.detailedMessage = null;
+        this.detailMessage = null;
     }
 
-    public ErrorResponse(ErrorCode errorCode, List<String> detailedMessage) {
+    public ErrorResponse(ErrorCode errorCode, List<String> detailMessage) {
         this.status = errorCode.getStatus().value();
         this.message = errorCode.getMessage();
         this.code = errorCode.toString();
-        this.detailedMessage = detailedMessage;
+        this.detailMessage = detailMessage;
     }
 
-    public ErrorResponse(HttpStatus status, String errorMessage, String code, List<String> detailedMessage) {
+    public ErrorResponse(HttpStatus status, String errorMessage, String code, List<String> detailMessage) {
         this.status = status.value();
         this.message = errorMessage;
         this.code = code;
-        this.detailedMessage = detailedMessage;
+        this.detailMessage = detailMessage;
     }
 
     public ErrorResponse(BusinessException businessException) {
