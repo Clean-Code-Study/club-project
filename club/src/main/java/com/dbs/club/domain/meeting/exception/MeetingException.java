@@ -1,14 +1,14 @@
 package com.dbs.club.domain.meeting.exception;
 
-import com.dbs.club.presentation.common.ErrorCode;
+import com.dbs.club.domain.common.BusinessException;
+import com.dbs.club.domain.common.exception.ErrorCode;
+
 import lombok.Getter;
 
 @Getter
-public class MeetingException extends RuntimeException {
+public class MeetingException extends BusinessException {
 
-    private ErrorCode errorCode;
-    public MeetingException(String message, ErrorCode errorCode) {
-        super(message);
-        this.errorCode = errorCode;
+    public MeetingException(ErrorCode errorCode) {
+        super(errorCode);
     }
 }

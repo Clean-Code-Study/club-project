@@ -13,7 +13,7 @@ import lombok.*;
 @Getter
 @Entity
 public class MeetingJoin extends BaseEntity {
-    //PK
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;

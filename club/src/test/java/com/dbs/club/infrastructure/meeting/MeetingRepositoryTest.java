@@ -23,7 +23,7 @@ class MeetingRepositoryTest {
 
     @Test
     void saveTest() {
-        Member member = Member.init("testId", "1234", "testName", "01011112222",
+        Member member = new Member("testId", "1234", "testName", "01011112222",
                 "testNickname", LocalDate.of(2000,1,1), MemberGenderType.FEMALE,
                 "testInterest", RegisterDeleteState.REGISTERED);
         Meeting saveMeeting = Meeting.init(member, "testTitle", "testContent", "testLocation",

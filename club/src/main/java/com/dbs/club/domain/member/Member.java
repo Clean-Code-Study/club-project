@@ -5,15 +5,28 @@ import java.time.LocalDate;
 import com.dbs.club.domain.common.BaseEntity;
 import com.dbs.club.domain.common.RegisterDeleteState;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Getter
+@Builder
+@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Getter
 @Entity
 public class Member extends BaseEntity {
+
+    public static final String LOGIN_ID_REGEX = "^[a-zA-Z0-9]{5,}$";
+    public static final String PASSWORD_REGEX = "^(?=.*[a-zA-Z])(?=.*\\d)(?=.*[!@#$%^&*])[A-Za-z\\d!@#$%^&*]{8,}$";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,18 +47,18 @@ public class Member extends BaseEntity {
     @Column(name = "nickname", nullable = false, length = 30)
     private String nickname;
 
-    @Column(name = "birth")
+    @Column(name = "birth", nullable = false)
     private LocalDate birth;
 
-    @Column(name = "gender", length = 10)
     @Enumerated(EnumType.STRING)
+    @Column(name = "gender", nullable = false, length = 10)
     private MemberGenderType gender;
 
     @Column(name = "interest", length = 50)
     private String interest;
 
-    @Column(name = "status", nullable = false, length = 30)
     @Enumerated(EnumType.STRING)
+    @Column(name = "status", nullable = false, length = 30)
     private RegisterDeleteState status;
 
     public Member(String loginId, String password, String name, String contact, String nickname, LocalDate birth,
@@ -59,10 +72,5 @@ public class Member extends BaseEntity {
         this.gender = gender;
         this.interest = interest;
         this.status = status;
-    }
-
-    public static Member init(String loginId, String password, String name, String contact, String nickname,
-        LocalDate birth, MemberGenderType gender, String interest, RegisterDeleteState status) {
-        return new Member(loginId, password, name, contact, nickname, birth, gender, interest, status);
     }
 }
