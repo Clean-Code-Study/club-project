@@ -11,6 +11,8 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDate;
 
 @Getter
+@Builder
+@AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 public class Meeting extends BaseEntity {
@@ -42,19 +44,4 @@ public class Meeting extends BaseEntity {
 
     @Column(name = "status", nullable = false, length = 30)
     private MeetingState status;
-
-    public Meeting(Member member, String title, String content, String location, LocalDate date, int joinLimit, int joinCount, MeetingState status) {
-        this.member = member;
-        this.title = title;
-        this.content = content;
-        this.location = location;
-        this.date = date;
-        this.joinLimit = joinLimit;
-        this.joinCount = joinCount;
-        this.status = status;
-    }
-
-    public static Meeting init(Member member, String title, String content, String location, LocalDate date, int joinLimit, int joinCount, MeetingState status) {
-        return new Meeting(member, title, content, location, date, joinLimit, joinCount, status);
-    }
 }

@@ -6,10 +6,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@RequestMapping("/api/v1/meetings")
+@RequestMapping(ROOT_URL)
 @RestController
 public class MeetingController {
 
+    static final String ROOT_URL = "/api/meetings";
     private final MeetingService meetingService;
 
     public MeetingController(MeetingService meetingService) {
@@ -17,7 +18,18 @@ public class MeetingController {
     }
 
     @PostMapping
-    public ResponseEntity<Long> saveMeeting() {
-        return ResponseEntity.ok(meetingService.saveMeeting().getId());
+    public ResponseEntity<Void> createMeeting() {
+        Member member = memberService.getMemberById(create.getMemberId());
+
+        Meeting meeting = create.toEntity(member);
+
+        meetingService.saveMeeting(meeting);
+
+        URI locationUri = UriComponentsBuilder.fromPath(ROOT_URL)
+                .pathSegment("{meetingId}")
+                .buildAndExpand(meeting.getId())
+                .toUri();
+
+        return ResponseEntity.created(locationUri).build();
     }
 }

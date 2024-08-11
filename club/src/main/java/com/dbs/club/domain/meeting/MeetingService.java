@@ -4,8 +4,7 @@ import com.dbs.club.domain.common.MeetingState;
 import com.dbs.club.infrastructure.meeting.MeetingRepository;
 import org.springframework.stereotype.Service;
 import com.dbs.club.domain.common.RegisterDeleteState;
-import com.dbs.club.domain.member.Member;
-import com.dbs.club.domain.member.MemberGenderType;
+import com.dbs.club.presentation.meeting.MeetingRequestDto;
 
 import java.time.LocalDate;
 
@@ -18,13 +17,8 @@ public class MeetingService {
         this.meetingRepository = meetingRepository;
     }
 
-    public Meeting saveMeeting() {
-        Member member = Member.init("testId", "1234", "testName", "01011112222",
-                "testNickname", LocalDate.of(2000,1,1), MemberGenderType.FEMALE,
-                "testInterest", RegisterDeleteState.REGISTERED);
-
-        Meeting meeting = Meeting.init(member, "testTitle", "testContent", "testLocation",
-                LocalDate.of(2000, 1, 1), 100, 0, MeetingState.OPEN);
-        return meetingRepository.save(meeting);
+     public long createMeeting(MeetingRequestDto.Create create) {
+        Meeting meeting = create.toEntity();
+        return meetingRepository.save(meeting).getId();
     }
 }
