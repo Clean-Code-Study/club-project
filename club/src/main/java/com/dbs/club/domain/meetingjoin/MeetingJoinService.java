@@ -10,7 +10,6 @@ import com.dbs.club.presentation.meetingjoin.MeetingJoinRequestDto;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-
 @Service
 public class MeetingJoinService {
 
@@ -18,7 +17,11 @@ public class MeetingJoinService {
     private final MemberService memberService;
     private final MeetingService meetingService;
 
-    public MeetingJoinService(MeetingJoinRepository meetingJoinRepository, MemberService memberService, MeetingService meetingService) {
+    public MeetingJoinService(
+            MeetingJoinRepository meetingJoinRepository,
+            MemberService memberService,
+            MeetingService meetingService
+    ) {
         this.meetingJoinRepository = meetingJoinRepository;
         this.memberService = memberService;
         this.meetingService = meetingService;
@@ -26,9 +29,7 @@ public class MeetingJoinService {
 
     @Transactional
     public long createMeetingJoin(MeetingJoinRequestDto.Create create) {
-
         Member member = memberService.getMember(create.memberId());
-
         Meeting meeting = meetingService.getMeeting(create.meetingId());
 
         MeetingJoin meetingJoin = MeetingJoin.builder()
@@ -36,8 +37,6 @@ public class MeetingJoinService {
                 .meeting(meeting)
                 .status(RegisterDeleteState.REGISTERED)
                 .build();
-
-
         return meetingJoinRepository.save(meetingJoin).getId();
     }
 }

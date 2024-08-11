@@ -1,10 +1,14 @@
 package com.dbs.club.domain.member.exception;
 
+import com.dbs.club.presentation.common.ErrorCode;
+import lombok.Getter;
+
+@Getter
 public class MemberException extends RuntimeException {
 
-    private static final long serialVersionUID = 5867172506387382920L;
-
-    public MemberException(String message) {
+    private ErrorCode errorCode;
+    public MemberException(String message, ErrorCode errorCode) {
         super(message);
+        this.errorCode = errorCode;
     }
 }

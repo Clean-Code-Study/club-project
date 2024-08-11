@@ -1,5 +1,6 @@
 package com.dbs.club.domain.meeting;
 
+import com.dbs.club.presentation.common.ErrorCode;
 import com.dbs.club.domain.common.MeetingState;
 import com.dbs.club.domain.meeting.exception.MeetingException;
 import com.dbs.club.infrastructure.meeting.MeetingRepository;
@@ -31,7 +32,7 @@ public class MeetingService {
 
     public Meeting getMeeting(Long meetingId) {
         Meeting findMeeting = meetingRepository.findById(meetingId)
-                .orElseThrow(() -> new MeetingException("모임을 찾을 수 없습니다."));
+                .orElseThrow(() -> new MeetingException("모임을 찾을 수 없습니다.", ErrorCode.NOT_FOUND));
         return findMeeting;
     }
 }

@@ -2,6 +2,7 @@ package com.dbs.club.domain.member;
 
 import java.time.LocalDate;
 
+import com.dbs.club.presentation.common.ErrorCode;
 import com.dbs.club.domain.member.exception.MemberException;
 import org.springframework.stereotype.Service;
 
@@ -25,7 +26,7 @@ public class MemberService {
     }
 
     public Member getMember(Long memberId) {
-        Member findMember = memberRepository.findById(memberId).orElseThrow(() -> new MemberException("회원을 찾을 수 없습니다."));
+        Member findMember = memberRepository.findById(memberId).orElseThrow(() -> new MemberException("회원을 찾을 수 없습니다.", ErrorCode.NOT_FOUND));
         return findMember;
     }
 

@@ -10,7 +10,6 @@ public class MeetingJoinRequestDto {
 
             @NotNull(message = "모임 ID는 필수입니다.")
             Long meetingId
-
     ) {
 
     }

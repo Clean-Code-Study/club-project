@@ -1,6 +1,7 @@
 package com.dbs.club.presentation.meetingjoin;
 
 import com.dbs.club.domain.meetingjoin.MeetingJoinService;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -24,7 +25,7 @@ public class MeetingJoinController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> createMeetingJoin(@RequestBody MeetingJoinRequestDto.Create create) {
+    public ResponseEntity<Void> createMeetingJoin(@RequestBody @Valid MeetingJoinRequestDto.Create create) {
         long meetingJoinId = meetingJoinService.createMeetingJoin(create);
 
         URI locationUri = UriComponentsBuilder.fromPath(ROOT_URL)
