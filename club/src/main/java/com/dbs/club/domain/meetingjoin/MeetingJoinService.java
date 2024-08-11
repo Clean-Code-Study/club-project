@@ -37,6 +37,7 @@ public class MeetingJoinService {
                 .meeting(meeting)
                 .status(RegisterDeleteState.REGISTERED)
                 .build();
+
         return meetingJoinRepository.save(meetingJoin).getId();
     }
 }
