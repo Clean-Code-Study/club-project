@@ -4,9 +4,7 @@ import com.dbs.club.domain.common.BaseEntity;
 import com.dbs.club.domain.common.MeetingState;
 import com.dbs.club.domain.member.Member;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDate;
 
@@ -16,6 +14,9 @@ import java.time.LocalDate;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 public class Meeting extends BaseEntity {
+
+    public static final String LOCATION_REGEX = "^[가-힣]+구 [가-힣]+동$";
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

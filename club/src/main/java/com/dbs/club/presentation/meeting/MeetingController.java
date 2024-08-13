@@ -1,10 +1,17 @@
 package com.dbs.club.presentation.meeting;
 
 import com.dbs.club.domain.meeting.MeetingService;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.util.UriComponentsBuilder;
+
+import java.net.URI;
+
+import static com.dbs.club.presentation.meeting.MeetingController.ROOT_URL;
 
 @RequestMapping(ROOT_URL)
 @RestController
@@ -18,16 +25,13 @@ public class MeetingController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> createMeeting() {
-        Member member = memberService.getMemberById(create.getMemberId());
+    public ResponseEntity<Void> createMeeting(@RequestBody @Valid MeetingRequestDto.Create create) {
 
-        Meeting meeting = create.toEntity(member);
-
-        meetingService.saveMeeting(meeting);
+        long meetingId = meetingService.createMeeting(create);
 
         URI locationUri = UriComponentsBuilder.fromPath(ROOT_URL)
                 .pathSegment("{meetingId}")
-                .buildAndExpand(meeting.getId())
+                .buildAndExpand(meetingId)
                 .toUri();
 
         return ResponseEntity.created(locationUri).build();
