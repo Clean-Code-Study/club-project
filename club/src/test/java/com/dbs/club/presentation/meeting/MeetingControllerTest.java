@@ -1,6 +1,5 @@
 package com.dbs.club.presentation.meeting;
 
-import com.dbs.club.domain.common.MeetingState;
 import com.dbs.club.domain.meeting.MeetingService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
@@ -38,8 +37,7 @@ public class MeetingControllerTest {
                 "Sample Content",
                 "강남구 역삼동",
                 LocalDate.now(),
-                10,
-                MeetingState.OPEN
+                10
         );
 
         Mockito.when(meetingService.createMeeting(any(MeetingRequestDto.Create.class))).thenReturn(1L);
