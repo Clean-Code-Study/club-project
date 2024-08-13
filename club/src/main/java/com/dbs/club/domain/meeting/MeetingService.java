@@ -1,14 +1,16 @@
 package com.dbs.club.domain.meeting;
 
-import com.dbs.club.domain.member.Member;
-import com.dbs.club.domain.member.MemberService;
-import com.dbs.club.infrastructure.meeting.MeetingRepository;
-import com.dbs.club.presentation.meeting.MeetingRequestDto;
+import java.time.LocalDate;
+
 import org.springframework.stereotype.Service;
 
+import com.dbs.club.domain.common.MeetingState;
+import com.dbs.club.domain.common.RegisterDeleteState;
 import com.dbs.club.domain.common.exception.ErrorCode;
 import com.dbs.club.domain.meeting.exception.MeetingException;
-import org.springframework.transaction.annotation.Transactional;
+import com.dbs.club.domain.member.Member;
+import com.dbs.club.domain.member.MemberGenderType;
+import com.dbs.club.infrastructure.meeting.MeetingRepository;
 
 @Service
 public class MeetingService {
@@ -21,11 +23,17 @@ public class MeetingService {
         this.memberService = memberService;
     }
 
-        @Transactional
-        public long createMeeting(MeetingRequestDto.Create create) {
-        Member member = memberService.getMember(create.memberId());
-        Meeting meeting = create.toEntity(member);
+    @Transactional
+    public long createMeeting(MeetingRequestDto.Create create) {
+    Member member = memberService.getMember(create.memberId());
+    Meeting meeting = create.toEntity(member);
 
-        return meetingRepository.save(meeting).getId();
+    return meetingRepository.save(meeting).getId();
+    }
+
+    public Meeting getMeeting(Long meetingId) {
+        Meeting findMeeting = meetingRepository.findById(meetingId)
+            .orElseThrow(() -> new MeetingException(ErrorCode.MEETING_NOT_FOUND));
+        return findMeeting;
     }
 }

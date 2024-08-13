@@ -4,12 +4,13 @@ import com.dbs.club.domain.common.BaseEntity;
 import com.dbs.club.domain.common.RegisterDeleteState;
 import com.dbs.club.domain.member.Member;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import jakarta.validation.constraints.Size;
+import lombok.*;
 
-@Getter
+@Builder
+@AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Getter
 @Entity
 public class Board extends BaseEntity {
 
@@ -18,27 +19,19 @@ public class Board extends BaseEntity {
     private Long id;
 
     @ManyToOne(cascade = CascadeType.REMOVE)
-    @JoinColumn(name = "member_id", referencedColumnName = "id")
+    @JoinColumn(name = "memberId", referencedColumnName = "id")
     private Member member;
 
+    @Size(max = 30, message = "제목은 최대 30자까지 가능합니다.")
     @Column(name = "title", nullable = false, length = 30)
     private String title;
 
+    @Size(max = 1500, message = "내용은 최대 1500자까지 가능합니다.")
     @Column(name = "content", nullable = false, length = 1500)
     private String content;
 
     @Column(name = "status", nullable = false, length = 30)
+    @Enumerated(EnumType.STRING)
     private RegisterDeleteState status;
 
-    //생성자
-    public Board(Member member, String title, String content, RegisterDeleteState status) {
-        this.member = member;
-        this.title = title;
-        this.content = content;
-        this.status = status;
-    }
-
-    public static Board init(Member member, String title, String content, RegisterDeleteState status) {
-        return new Board(member, title, content, status);
-    }
 }
