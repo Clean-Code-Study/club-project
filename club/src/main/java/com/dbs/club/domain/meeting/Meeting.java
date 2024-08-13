@@ -4,16 +4,19 @@ import com.dbs.club.domain.common.BaseEntity;
 import com.dbs.club.domain.common.MeetingState;
 import com.dbs.club.domain.member.Member;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDate;
 
 @Getter
+@Builder
+@AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 public class Meeting extends BaseEntity {
+
+    public static final String LOCATION_REGEX = "^[가-힣]+구 [가-힣]+동$";
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -43,19 +46,4 @@ public class Meeting extends BaseEntity {
     @Column(name = "status", nullable = false, length = 30)
     @Enumerated(EnumType.STRING)
     private MeetingState status;
-
-    public Meeting(Member member, String title, String content, String location, LocalDate date, int joinLimit, int joinCount, MeetingState status) {
-        this.member = member;
-        this.title = title;
-        this.content = content;
-        this.location = location;
-        this.date = date;
-        this.joinLimit = joinLimit;
-        this.joinCount = joinCount;
-        this.status = status;
-    }
-
-    public static Meeting init(Member member, String title, String content, String location, LocalDate date, int joinLimit, int joinCount, MeetingState status) {
-        return new Meeting(member, title, content, location, date, joinLimit, joinCount, status);
-    }
 }

@@ -16,19 +16,19 @@ import com.dbs.club.infrastructure.meeting.MeetingRepository;
 public class MeetingService {
 
     private final MeetingRepository meetingRepository;
+    private final MemberService memberService;
 
-    public MeetingService(MeetingRepository meetingRepository) {
+    public MeetingService(MeetingRepository meetingRepository, MemberService memberService) {
         this.meetingRepository = meetingRepository;
+        this.memberService = memberService;
     }
 
-    public Meeting saveMeeting() {
-        Member member = Member.init("testId", "1234", "testName", "01011112222",
-            "testNickname", LocalDate.of(2000, 1, 1), MemberGenderType.FEMALE,
-            "testInterest", RegisterDeleteState.REGISTERED);
+    @Transactional
+    public long createMeeting(MeetingRequestDto.Create create) {
+    Member member = memberService.getMember(create.memberId());
+    Meeting meeting = create.toEntity(member);
 
-        Meeting meeting = Meeting.init(member, "testTitle", "testContent", "testLocation",
-            LocalDate.of(2000, 1, 1), 100, 0, MeetingState.OPEN);
-        return meetingRepository.save(meeting);
+    return meetingRepository.save(meeting).getId();
     }
 
     public Meeting getMeeting(Long meetingId) {
