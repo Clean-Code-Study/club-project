@@ -1,16 +1,14 @@
 package com.dbs.club.domain.meeting;
 
-import java.time.LocalDate;
 
-import org.springframework.stereotype.Service;
-
-import com.dbs.club.domain.common.MeetingState;
-import com.dbs.club.domain.common.RegisterDeleteState;
 import com.dbs.club.domain.common.exception.ErrorCode;
 import com.dbs.club.domain.meeting.exception.MeetingException;
 import com.dbs.club.domain.member.Member;
-import com.dbs.club.domain.member.MemberGenderType;
+import com.dbs.club.domain.member.MemberService;
 import com.dbs.club.infrastructure.meeting.MeetingRepository;
+import com.dbs.club.presentation.meeting.MeetingRequestDto;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class MeetingService {
