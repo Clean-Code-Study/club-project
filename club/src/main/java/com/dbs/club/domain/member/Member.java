@@ -73,4 +73,20 @@ public class Member extends BaseEntity {
         this.interest = interest;
         this.status = status;
     }
+
+    public void update(
+        String password,
+        String name,
+        String contact,
+        String nickname,
+        LocalDate birth,
+        String interest
+    ) {
+        this.password = password;
+        this.name = name;
+        this.contact = contact;
+        this.nickname = nickname;
+        this.birth = birth;
+        this.interest = interest;
+    }
 }

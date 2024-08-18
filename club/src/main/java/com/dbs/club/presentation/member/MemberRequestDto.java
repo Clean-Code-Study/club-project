@@ -53,4 +53,24 @@ public class MemberRequestDto {
         }
     }
 
+    public record Update(
+        @Pattern(regexp = Member.PASSWORD_REGEX, message = "비밀번호는 8자리 이상 영문 소문자와 숫자, 특수문자를 포함해야 합니다.")
+        @NotNull(message = "비밀번호는 필수입니다.")
+        String password,
+
+        @NotNull(message = "이름은 필수입니다.")
+        String name,
+
+        @NotNull(message = "연락처는 필수입니다.")
+        String contact,
+
+        @NotNull(message = "닉네임은 필수입니다.")
+        String nickname,
+
+        @NotNull(message = "생년월일은 필수입니다.")
+        LocalDate birth,
+
+        String interest
+    ) {
+    }
 }
