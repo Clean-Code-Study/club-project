@@ -1,5 +1,6 @@
 package com.dbs.club.presentation.member;
 
+import static io.restassured.RestAssured.*;
 import static org.hamcrest.Matchers.*;
 
 import java.time.LocalDate;
@@ -8,8 +9,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.http.HttpStatus;
 
 import com.dbs.club.domain.member.MemberGenderType;
+import com.dbs.club.domain.member.fixture.MemberFixture;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
@@ -38,8 +41,7 @@ public class MemberControllerTest {
             "music"
         );
 
-        RestAssured
-            .given()
+        given()
             .contentType(ContentType.JSON)
             .body(createRequest)
             .when()
@@ -61,8 +63,7 @@ public class MemberControllerTest {
             "music"
         );
 
-        RestAssured
-            .given()
+        given()
             .contentType(ContentType.JSON)
             .body(createRequest)
             .when()
@@ -85,8 +86,7 @@ public class MemberControllerTest {
             "music"
         );
 
-        RestAssured
-            .given()
+        given()
             .contentType(ContentType.JSON)
             .body(createRequest)
             .when()
@@ -109,8 +109,7 @@ public class MemberControllerTest {
             "music"
         );
 
-        RestAssured
-            .given()
+        given()
             .contentType(ContentType.JSON)
             .body(createRequest)
             .when()
@@ -118,5 +117,71 @@ public class MemberControllerTest {
             .then()
             .statusCode(400)
             .body("code", equalTo("COMMON_INVALID_PARAMETER"));
+    }
+
+    @Test
+    void updateMember_Success() {
+        String url = MemberFixture.createMemberFixture();
+
+        MemberRequestDto.Update request = new MemberRequestDto.Update(
+            "password@1234",
+            "수정할회원이름",
+            "01012345678",
+            "testNickname2",
+            LocalDate.of(2000, 1, 1),
+            "music"
+        );
+
+        given()
+            .contentType(ContentType.JSON)
+            .body(request)
+            .when()
+            .put(url)
+            .then()
+            .statusCode(HttpStatus.NO_CONTENT.value());
+    }
+
+    @Test
+    void updateMember_Fail_404() {
+        long memberId = 99L;
+
+        MemberRequestDto.Update request = new MemberRequestDto.Update(
+            "password@1234",
+            "수정할회원이름",
+            "01012345678",
+            "testNickname2",
+            LocalDate.of(2000, 1, 1),
+            "music"
+        );
+
+        given()
+            .contentType(ContentType.JSON)
+            .body(request)
+            .when()
+            .put("/api/members/" + memberId)
+            .then()
+            .statusCode(HttpStatus.NOT_FOUND.value());
+    }
+
+    @Test
+    void updateMember_Fail_400() {
+        String url = MemberFixture.createMemberFixture();
+
+        MemberRequestDto.Update request = new MemberRequestDto.Update(
+            "password",
+            "수정할회원이름",
+            "01012345678",
+            "testNickname2",
+            LocalDate.of(2000, 1, 1),
+            "music"
+        );
+
+        given()
+            .contentType(ContentType.JSON)
+            .body(request)
+            .when()
+            .put(url)
+            .then()
+            .statusCode(HttpStatus.BAD_REQUEST.value());
     }
 }
