@@ -12,7 +12,7 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 
 import com.dbs.club.domain.member.MemberGenderType;
-import com.dbs.club.domain.member.fixture.MemberFixture;
+import com.dbs.club.presentation.member.fixture.MemberControllerTestFixture;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
@@ -121,7 +121,7 @@ public class MemberControllerTest {
 
     @Test
     void updateMember_Success() {
-        String url = MemberFixture.createMemberFixture();
+        String url = MemberControllerTestFixture.createMemberFixture();
 
         MemberRequestDto.Update request = new MemberRequestDto.Update(
             "password@1234",
@@ -165,7 +165,7 @@ public class MemberControllerTest {
 
     @Test
     void updateMember_Fail_400() {
-        String url = MemberFixture.createMemberFixture();
+        String url = MemberControllerTestFixture.createMemberFixture();
 
         MemberRequestDto.Update request = new MemberRequestDto.Update(
             "password",

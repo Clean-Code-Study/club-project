@@ -1,4 +1,4 @@
-package com.dbs.club.domain.member.fixture;
+package com.dbs.club.presentation.member.fixture;
 
 import static io.restassured.RestAssured.*;
 
@@ -14,7 +14,7 @@ import com.dbs.club.presentation.member.MemberRequestDto;
 
 import io.restassured.http.ContentType;
 
-public class MemberFixture {
+public class MemberControllerTestFixture {
     public static final String PASSWORD = "password123!";
     public static final String NAME = "테스트이름";
     public static final String CONTACT = "01012345678";
