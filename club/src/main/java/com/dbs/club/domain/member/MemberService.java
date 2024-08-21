@@ -24,6 +24,29 @@ public class MemberService {
         return memberRepository.save(member).getId();
     }
 
+    @Transactional(readOnly = true)
+    public Member getMember(Long memberId) {
+        Member member = memberRepository.findById(memberId)
+            .orElseThrow(() -> new MemberException(ErrorCode.MEMBER_NOT_FOUND));
+
+        return member;
+    }
+
+    @Transactional
+    public void updateMember(MemberRequestDto.Update request, Long memberId) {
+        Member member = getMember(memberId);
+        duplicateNicknameCheck(request.nickname());
+
+        member.update(
+            request.password(),
+            request.name(),
+            request.contact(),
+            request.nickname(),
+            request.birth(),
+            request.interest()
+        );
+    }
+
     private void validateDuplicateMember(Member member) {
         duplicateLoginIdCheck(member.getLoginId());
         duplicateNicknameCheck(member.getNickname());
@@ -42,11 +65,4 @@ public class MemberService {
                 throw new MemberException(ErrorCode.MEMBER_NICKNAME_DUPLICATE);
             });
     }
-
-    public Member getMember(Long memberId) {
-        Member findMember = memberRepository.findById(memberId)
-            .orElseThrow(() -> new MemberException(ErrorCode.MEMBER_NOT_FOUND));
-        return findMember;
-    }
-
 }
