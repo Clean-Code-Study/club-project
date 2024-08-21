@@ -34,4 +34,12 @@ public class Board extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private RegisterDeleteState status;
 
+
+    public void update(
+            String title,
+            String content
+    ){
+        this.title = title;
+        this.content = content;
+    }
 }
