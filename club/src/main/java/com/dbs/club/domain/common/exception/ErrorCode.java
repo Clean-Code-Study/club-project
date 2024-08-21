@@ -13,7 +13,7 @@ public enum ErrorCode {
     MEMBER_LOGIN_ID_DUPLICATE(HttpStatus.BAD_REQUEST, "이미 사용중인 아이디입니다."),
     MEMBER_NICKNAME_DUPLICATE(HttpStatus.BAD_REQUEST, "이미 사용중인 닉네임입니다."),
     MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, "회원을 찾을 수 없습니다."),
-
+    MEETINGJOIN_NOT_FOUND(HttpStatus.NOT_FOUND, "모임신청 내역을 찾을 수 없습니다."),
     MEETING_NOT_FOUND(HttpStatus.NOT_FOUND, "모임을 찾을 수 없습니다."),
     ;
 

@@ -31,4 +31,9 @@ public class MeetingJoin extends BaseEntity {
     private RegisterDeleteState status;
 
 
+    public void cancel(
+            RegisterDeleteState status) {
+        this.status = status;
+    }
+
 }
