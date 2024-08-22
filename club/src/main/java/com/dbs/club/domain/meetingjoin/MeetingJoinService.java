@@ -1,7 +1,6 @@
 package com.dbs.club.domain.meetingjoin;
 
 import com.dbs.club.domain.common.MeetingState;
-import com.dbs.club.domain.common.RegisterDeleteState;
 import com.dbs.club.domain.common.exception.ErrorCode;
 import com.dbs.club.domain.meeting.Meeting;
 import com.dbs.club.domain.meeting.MeetingService;
@@ -13,10 +12,10 @@ import com.dbs.club.presentation.meetingjoin.MeetingJoinRequestDto;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
-
 @Service
 public class MeetingJoinService {
+
+    private static final int DECREMENT_ONE = 1;
 
     private final MeetingJoinRepository meetingJoinRepository;
     private final MemberService memberService;
@@ -40,7 +39,7 @@ public class MeetingJoinService {
         MeetingJoin meetingJoin = MeetingJoin.builder()
                 .member(member)
                 .meeting(meeting)
-                .status(RegisterDeleteState.REGISTERED)
+                .status(MeetingJoinState.JOIN)
                 .build();
 
         return meetingJoinRepository.save(meetingJoin).getId();
@@ -49,28 +48,35 @@ public class MeetingJoinService {
     @Transactional(readOnly = true)
     public MeetingJoin getMeetingJoin(Long meetingJoinId) {
         return meetingJoinRepository.findById(meetingJoinId)
-                .orElseThrow(() -> new MeetingJoinException(ErrorCode.MEETINGJOIN_NOT_FOUND));
+                .orElseThrow(() -> new MeetingJoinException(ErrorCode.MEETING_JOIN_NOT_FOUND));
     }
 
     @Transactional
-    public void cancelMeetingJoin(MeetingJoinRequestDto.Cancel request, Long meetingJoinId) {
+    public void cancelMeetingJoin(Long meetingJoinId) {
 
         MeetingJoin meetingJoin = getMeetingJoin(meetingJoinId);
 
-        if(meetingJoin.getMeeting().getDate().isBefore(LocalDate.now())) {
-            throw new IllegalStateException("모임 참여 후에는 취소할 수 없습니다.");
+
+        if (meetingJoin.isMeetingDateBeforeToday()) {
+            throw new MeetingJoinException(ErrorCode.MEETING_JOIN_CAN_NOT_CANCEL);
         }
 
-        RegisterDeleteState oldStatus = meetingJoin.getStatus();
+        MeetingJoinState meetingJoinOldStatus = meetingJoin.getStatus();
+        MeetingState meetingOldStatus = meetingJoin.getMeeting().getStatus();
 
-        meetingJoin.cancel(request.status());
+        meetingJoin.cancel();
 
-        if(oldStatus == RegisterDeleteState.REGISTERED && meetingJoin.getMeeting().getJoinCount() == meetingJoin.getMeeting().getJoinLimit()) {
-            meetingJoin.getMeeting().setStatus(MeetingState.OPEN);
+        if (canUpdateMeetingStatus(meetingJoinOldStatus, meetingOldStatus)) {
+            meetingJoin.getMeeting().updateStatus(MeetingState.OPEN);
         }
 
-        meetingJoin.getMeeting().setJoinCount(meetingJoin.getMeeting().getJoinCount() - 1);
+        meetingJoin.getMeeting().updateJoinCount(meetingJoin.getMeeting().getJoinCount() - DECREMENT_ONE);
 
         meetingJoinRepository.save(meetingJoin);
     }
+
+    private boolean canUpdateMeetingStatus(MeetingJoinState meetingJoinOldStatus, MeetingState meetingOldStatus) {
+        return MeetingJoinState.JOIN == meetingJoinOldStatus && MeetingState.FULL == meetingOldStatus;
+    }
+
 }

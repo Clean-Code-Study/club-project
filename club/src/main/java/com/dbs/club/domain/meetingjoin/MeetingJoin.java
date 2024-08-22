@@ -1,11 +1,12 @@
 package com.dbs.club.domain.meetingjoin;
 
 import com.dbs.club.domain.common.BaseEntity;
-import com.dbs.club.domain.common.RegisterDeleteState;
 import com.dbs.club.domain.meeting.Meeting;
 import com.dbs.club.domain.member.Member;
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.time.LocalDate;
 
 @Builder
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
@@ -28,12 +29,14 @@ public class MeetingJoin extends BaseEntity {
 
     @Column(name = "status", nullable = false, length = 30)
     @Enumerated(EnumType.STRING)
-    private RegisterDeleteState status;
+    private MeetingJoinState status;
 
+    public void cancel() {
+        this.status = MeetingJoinState.CANCEL;
+    }
 
-    public void cancel(
-            RegisterDeleteState status) {
-        this.status = status;
+    public boolean isMeetingDateBeforeToday() {
+        return this.getMeeting().getDate().isBefore(LocalDate.now());
     }
 
 }

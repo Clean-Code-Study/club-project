@@ -1,7 +1,6 @@
 package com.dbs.club.presentation.meetingjoin;
 
 import com.dbs.club.domain.meetingjoin.MeetingJoinService;
-import com.dbs.club.domain.meetingjoin.exception.MeetingJoinException;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -35,11 +34,8 @@ public class MeetingJoinController {
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PatchMapping("/{meetingJoinId}")
-    public ResponseEntity<Void> cancelMeeting(
-            @PathVariable Long meetingJoinId,
-            @Valid @RequestBody MeetingJoinRequestDto.Cancel request
-    ) {
-        meetingJoinService.cancelMeetingJoin(request, meetingJoinId);
+    public ResponseEntity<Void> cancelMeeting(@PathVariable Long meetingJoinId) {
+        meetingJoinService.cancelMeetingJoin(meetingJoinId);
         return ResponseEntity.noContent().build();
     }
 }

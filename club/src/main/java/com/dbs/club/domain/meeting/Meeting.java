@@ -47,11 +47,11 @@ public class Meeting extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private MeetingState status;
 
-    public void setStatus(MeetingState status) {
+    public void updateStatus(MeetingState status) {
         this.status = status;
     }
 
-    public void setJoinCount(int joinCount) {
+    public void updateJoinCount(int joinCount) {
         this.joinCount = joinCount;
     }
 }

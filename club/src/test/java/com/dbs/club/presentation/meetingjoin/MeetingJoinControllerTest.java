@@ -1,5 +1,6 @@
 package com.dbs.club.presentation.meetingjoin;
 
+import com.dbs.club.presentation.meeting.MeetingRequestDto;
 import com.dbs.club.presentation.meeting.fixture.MeetingControllerTestFixture;
 import com.dbs.club.presentation.meetingjoin.fixture.MeetingJoinControllerTestFixture;
 import com.dbs.club.presentation.member.fixture.MemberControllerTestFixture;
@@ -9,11 +10,12 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 
+import java.net.URI;
+import java.time.LocalDate;
 
-import static com.dbs.club.domain.common.RegisterDeleteState.DELETED;
-import static com.dbs.club.domain.common.RegisterDeleteState.REGISTERED;
 import static io.restassured.RestAssured.given;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -46,6 +48,7 @@ public class MeetingJoinControllerTest {
                 .then()
                 .statusCode(201);
     }
+
     @Test
     void cancelMeetingJoin_Success() {
         String memberUrl = MemberControllerTestFixture.createMemberFixture();
@@ -55,18 +58,10 @@ public class MeetingJoinControllerTest {
         Long meetingId = Long.parseLong(meetingUrl.substring(meetingUrl.lastIndexOf("/") + 1));
 
         String url = MeetingJoinControllerTestFixture.createMeetingJoinFixture(memberId, meetingId);
-        Long meetingJoinId = Long.parseLong(url.substring(url.lastIndexOf("/") + 1));
-
-        MeetingJoinRequestDto.Cancel request = new MeetingJoinRequestDto.Cancel(
-                meetingJoinId,
-                memberId,
-                meetingId,
-                DELETED
-        );
+        long meetingJoinId = Long.parseLong(url.substring(url.lastIndexOf("/") + 1));
 
         given()
                 .contentType(ContentType.JSON)
-                .body(request)
                 .when()
                 .patch("/api/meeting-joins/" + meetingJoinId)
                 .then()
@@ -74,24 +69,40 @@ public class MeetingJoinControllerTest {
     }
 
     @Test
-    void cancelMeetingJoin_Fail_404() {
-        long meetingJoinId = 999L;
-        long memberId = 999L;
-        long meetingId = 999L;
+    void cancelMeetingJoin_Fail_400() {
 
-        MeetingJoinRequestDto.Cancel request = new MeetingJoinRequestDto.Cancel(
-                1L,
-                1L,
-                1L,
-                DELETED
+        String memberUrl = MemberControllerTestFixture.createMemberFixture();
+        Long memberId = Long.parseLong(memberUrl.substring(memberUrl.lastIndexOf("/") + 1));
+
+        MeetingRequestDto.Create request = new MeetingRequestDto.Create(
+                memberId,
+                "hi",
+                "CONTENT",
+                "광진구 구의동",
+                LocalDate.of(2024, 8, 1),
+                5
         );
 
-        given()
+        String location = given()
                 .contentType(ContentType.JSON)
                 .body(request)
                 .when()
+                .post("/api/meetings")
+                .then()
+                .statusCode(201)
+                .extract().header(HttpHeaders.LOCATION);
+
+        String meetingUrl = URI.create(location).getPath();
+        Long meetingId = Long.parseLong(meetingUrl.substring(meetingUrl.lastIndexOf("/") + 1));
+
+        String url = MeetingJoinControllerTestFixture.createMeetingJoinFixture(memberId, meetingId);
+        long meetingJoinId = Long.parseLong(url.substring(url.lastIndexOf("/") + 1));
+
+        given()
+                .contentType(ContentType.JSON)
+                .when()
                 .patch("/api/meeting-joins/" + meetingJoinId)
                 .then()
-                .statusCode(HttpStatus.NOT_FOUND.value());
+                .statusCode(HttpStatus.BAD_REQUEST.value());
     }
 }

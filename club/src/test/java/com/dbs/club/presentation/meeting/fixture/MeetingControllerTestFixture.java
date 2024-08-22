@@ -14,7 +14,7 @@ public class MeetingControllerTestFixture {
     public static final String TITLE = "Test Title";
     public static final String CONTENT = "Test Content";
     public static final String LOCATION = "광진구 구의동";
-    public static final LocalDate LOCALDATE = LocalDate.of(2024, 9, 1);
+    public static final LocalDate LOCALDATE = LocalDate.of(2027, 9, 1);
     public static final int JOIN_LIMIT = 5;
 
     public static String createMeetingFixture(Long memberId) {
