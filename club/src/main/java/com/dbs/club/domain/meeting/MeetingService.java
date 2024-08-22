@@ -7,6 +7,10 @@ import com.dbs.club.domain.member.Member;
 import com.dbs.club.domain.member.MemberService;
 import com.dbs.club.infrastructure.meeting.MeetingRepository;
 import com.dbs.club.presentation.meeting.MeetingRequestDto;
+import com.dbs.club.presentation.meeting.MeetingResponseDto;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,5 +37,12 @@ public class MeetingService {
         Meeting findMeeting = meetingRepository.findById(meetingId)
             .orElseThrow(() -> new MeetingException(ErrorCode.MEETING_NOT_FOUND));
         return findMeeting;
+    }
+
+    public Page<MeetingResponseDto.List> getMeetings(int page) {
+        Pageable pageable = PageRequest.of(page, 3);
+        Page<Meeting> meetings = meetingRepository.findAll(pageable);
+
+        return meetings.map(MeetingResponseDto.List::fromEntity);
     }
 }
