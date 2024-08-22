@@ -2,11 +2,9 @@ package com.dbs.club.presentation.meetingjoin;
 
 import com.dbs.club.domain.meetingjoin.MeetingJoinService;
 import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
@@ -32,5 +30,12 @@ public class MeetingJoinController {
                 .pathSegment("{meetingJoinId}").buildAndExpand(meetingJoinId).toUri();
 
         return ResponseEntity.created(locationUri).build();
+    }
+
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PatchMapping("/{meetingJoinId}")
+    public ResponseEntity<Void> cancelMeeting(@PathVariable Long meetingJoinId) {
+        meetingJoinService.cancelMeetingJoin(meetingJoinId);
+        return ResponseEntity.noContent().build();
     }
 }

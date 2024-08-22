@@ -1,8 +1,10 @@
 package com.dbs.club.domain.meetingjoin;
 
-import com.dbs.club.domain.common.RegisterDeleteState;
+import com.dbs.club.domain.common.MeetingState;
+import com.dbs.club.domain.common.exception.ErrorCode;
 import com.dbs.club.domain.meeting.Meeting;
 import com.dbs.club.domain.meeting.MeetingService;
+import com.dbs.club.domain.meetingjoin.exception.MeetingJoinException;
 import com.dbs.club.domain.member.Member;
 import com.dbs.club.domain.member.MemberService;
 import com.dbs.club.infrastructure.meetingjoin.MeetingJoinRepository;
@@ -12,6 +14,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class MeetingJoinService {
+
+    private static final int DECREMENT_ONE = 1;
 
     private final MeetingJoinRepository meetingJoinRepository;
     private final MemberService memberService;
@@ -35,9 +39,44 @@ public class MeetingJoinService {
         MeetingJoin meetingJoin = MeetingJoin.builder()
                 .member(member)
                 .meeting(meeting)
-                .status(RegisterDeleteState.REGISTERED)
+                .status(MeetingJoinState.JOIN)
                 .build();
 
         return meetingJoinRepository.save(meetingJoin).getId();
     }
+
+    @Transactional(readOnly = true)
+    public MeetingJoin getMeetingJoin(Long meetingJoinId) {
+        return meetingJoinRepository.findById(meetingJoinId)
+                .orElseThrow(() -> new MeetingJoinException(ErrorCode.MEETING_JOIN_NOT_FOUND));
+    }
+
+    @Transactional
+    public void cancelMeetingJoin(Long meetingJoinId) {
+
+        MeetingJoin meetingJoin = getMeetingJoin(meetingJoinId);
+
+
+        if (meetingJoin.isMeetingDateBeforeToday()) {
+            throw new MeetingJoinException(ErrorCode.MEETING_JOIN_CAN_NOT_CANCEL);
+        }
+
+        MeetingJoinState meetingJoinOldStatus = meetingJoin.getStatus();
+        MeetingState meetingOldStatus = meetingJoin.getMeeting().getStatus();
+
+        meetingJoin.cancel();
+
+        if (canUpdateMeetingStatus(meetingJoinOldStatus, meetingOldStatus)) {
+            meetingJoin.getMeeting().updateStatus(MeetingState.OPEN);
+        }
+
+        meetingJoin.getMeeting().updateJoinCount(meetingJoin.getMeeting().getJoinCount() - DECREMENT_ONE);
+
+        meetingJoinRepository.save(meetingJoin);
+    }
+
+    private boolean canUpdateMeetingStatus(MeetingJoinState meetingJoinOldStatus, MeetingState meetingOldStatus) {
+        return MeetingJoinState.JOIN == meetingJoinOldStatus && MeetingState.FULL == meetingOldStatus;
+    }
+
 }

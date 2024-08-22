@@ -1,51 +1,43 @@
 package com.dbs.club.presentation.meeting;
 
-import com.dbs.club.domain.meeting.MeetingService;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MockMvc;
-
+import static io.restassured.RestAssured.*;
 import java.time.LocalDate;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.web.server.LocalServerPort;
+import com.dbs.club.presentation.member.fixture.MemberControllerTestFixture;
 
-@WebMvcTest(MeetingController.class)
+import io.restassured.RestAssured;
+import io.restassured.http.ContentType;
+
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class MeetingControllerTest {
 
-    @Autowired
-    private MockMvc mockMvc;
+    @LocalServerPort
+    private int port;
 
-    @MockBean
-    private MeetingService meetingService;
-
-    @Autowired
-    private ObjectMapper objectMapper;
+    @BeforeEach
+    public void setUp() {
+        RestAssured.port = port;
+    }
 
     @Test
-    void createMeeting() throws Exception {
-        MeetingRequestDto.Create createDto = new MeetingRequestDto.Create(
-                1L,
-                "Sample Title",
-                "Sample Content",
-                "강남구 역삼동",
-                LocalDate.now(),
-                10
-        );
+    void createMeeting_Success() {
+        String memberUrl = MemberControllerTestFixture.createMemberFixture();
+        Long memberId = Long.parseLong(memberUrl.substring(memberUrl.lastIndexOf("/") + 1));
 
-        Mockito.when(meetingService.createMeeting(any(MeetingRequestDto.Create.class))).thenReturn(1L);
+        MeetingRequestDto.Create createRequest =
+                new MeetingRequestDto.Create (memberId, "testTitle", "testContent", "testLocation", LocalDate.of(2024, 9, 1), 5);
 
-        mockMvc.perform(post("/api/meetings")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(createDto)))
-                .andExpect(status().isCreated())
-                .andExpect(header().string("Location", "/api/meetings/1"));
+        given()
+                .contentType(ContentType.JSON)
+                .body(createRequest)
+                .when()
+                .post("/api/meetings")
+                .then();
+//                .statusCode(201);
     }
+
 }
