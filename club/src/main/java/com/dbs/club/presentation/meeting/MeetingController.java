@@ -2,11 +2,9 @@ package com.dbs.club.presentation.meeting;
 
 import com.dbs.club.domain.meeting.MeetingService;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
@@ -35,5 +33,11 @@ public class MeetingController {
                 .toUri();
 
         return ResponseEntity.created(locationUri).build();
+    }
+
+    @GetMapping
+    public ResponseEntity<Page<MeetingResponseDto.List>> getMeetings(@RequestParam(defaultValue = "0") int page) {
+        Page<MeetingResponseDto.List> meetings = meetingService.getMeetings(page);
+        return ResponseEntity.ok(meetings);
     }
 }
