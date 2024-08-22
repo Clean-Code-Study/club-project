@@ -2,11 +2,9 @@ package com.dbs.club.presentation.board;
 
 import com.dbs.club.domain.board.BoardService;
 import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
@@ -21,6 +19,7 @@ public class BoardController {
     private final BoardService boardService;
 
     public BoardController(BoardService boardService) {
+
         this.boardService = boardService;
     }
 
@@ -32,5 +31,15 @@ public class BoardController {
                 .pathSegment("{boardId}").buildAndExpand(boardId).toUri();
 
         return ResponseEntity.created(locationUri).build();
+    }
+
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PatchMapping("/{boardId}")
+    public ResponseEntity<Void> updateBoard(
+            @PathVariable Long boardId,
+            @Valid @RequestBody BoardRequestDto.Update request
+    ){
+        boardService.updateBoard(request, boardId);
+        return ResponseEntity.noContent().build();
     }
 }
