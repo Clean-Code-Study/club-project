@@ -46,4 +46,25 @@ public class MeetingRequestDto {
                 .build();
         }
     }
+
+    public record Update(
+        @Size(max = 30, message = "제목은 최대 30자까지 가능합니다.")
+        @NotNull(message = "제목은 필수입니다.")
+        String title,
+
+        @Size(max = 500, message = "내용은 최대 500자까지 가능합니다.")
+        @NotNull(message = "내용은 필수입니다.")
+        String content,
+
+        @Pattern(regexp = Meeting.LOCATION_REGEX, message = "모임 장소는 _구 _동 형식으로 작성해야 합니다.")
+        @NotNull(message = "장소는 필수입니다.")
+        String location,
+
+        @NotNull(message = "날짜는 필수입니다.")
+        LocalDate date,
+
+        @NotNull(message = "참가 인원은 필수입니다.")
+        int joinLimit
+    ) {
+    }
 }

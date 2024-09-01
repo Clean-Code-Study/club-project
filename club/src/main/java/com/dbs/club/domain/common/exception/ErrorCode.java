@@ -19,7 +19,8 @@ public enum ErrorCode {
     MEETING_NOT_FOUND(HttpStatus.NOT_FOUND, "모임을 찾을 수 없습니다."),
 
     BOARD_NOT_FOUND(HttpStatus.NOT_FOUND, "게시물을 찾을 수 없습니다."),
-    ;
+
+    MEETING_CAN_NOT_UPDATE(HttpStatus.BAD_REQUEST, "모임 날짜가 지난 후에는 수정이 불가능합니다.");
 
     private final HttpStatus status;
     private final String message;

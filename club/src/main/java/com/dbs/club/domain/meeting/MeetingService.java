@@ -45,4 +45,21 @@ public class MeetingService {
 
         return meetings.map(MeetingResponseDto.List::fromEntity);
     }
+
+    @Transactional
+    public  void updateMeeting(MeetingRequestDto.Update request, Long meetingId) {
+        Meeting meeting = getMeeting(meetingId);
+
+        if (meeting.canNotUpdateMeetingDate()) {
+           throw new MeetingException(ErrorCode.MEETING_CAN_NOT_UPDATE);
+        }
+
+        meeting.update(
+                request.title(),
+                request.content(),
+                request.location(),
+                request.date(),
+                request.joinLimit()
+        );
+    }
 }
