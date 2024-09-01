@@ -54,4 +54,18 @@ public class Meeting extends BaseEntity {
     public void updateJoinCount(int joinCount) {
         this.joinCount = joinCount;
     }
+
+    public void update(
+            String title,
+            String content,
+            String location,
+            LocalDate date,
+            int joinLimit
+    ) {
+        this.title = title;
+        this.content = content;
+        this.location = location;
+        this.date = date;
+        this.joinLimit = joinLimit;
+    }
 }
