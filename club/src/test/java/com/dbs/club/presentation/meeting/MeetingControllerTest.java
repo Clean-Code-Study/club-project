@@ -37,9 +37,9 @@ public class MeetingControllerTest {
                 .contentType(ContentType.JSON)
                 .body(createRequest)
                 .when()
-                .post("/api/meetings")
-                .then();
- //               .statusCode(201);
+                .post("/api/meeting")
+                .then()
+                .statusCode(201);
     }
 
     @Test
@@ -87,4 +87,4 @@ public class MeetingControllerTest {
                 .statusCode(HttpStatus.NOT_FOUND.value());
     }
 
-    }
+}

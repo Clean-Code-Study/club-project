@@ -68,4 +68,8 @@ public class Meeting extends BaseEntity {
         this.date = date;
         this.joinLimit = joinLimit;
     }
+
+    public boolean canNotUpdateMeetingDate() {
+        return this.date.isBefore(LocalDate.now());
+    }
 }

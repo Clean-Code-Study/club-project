@@ -14,8 +14,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
-
 @Service
 public class MeetingService {
 
@@ -52,7 +50,7 @@ public class MeetingService {
     public  void updateMeeting(MeetingRequestDto.Update request, Long meetingId) {
         Meeting meeting = getMeeting(meetingId);
 
-        if (!canUpdateMeetingDate(meeting.getDate())) {
+        if (meeting.canNotUpdateMeetingDate()) {
            throw new MeetingException(ErrorCode.MEETING_CAN_NOT_UPDATE);
         }
 
@@ -63,9 +61,5 @@ public class MeetingService {
                 request.date(),
                 request.joinLimit()
         );
-    }
-
-    private boolean canUpdateMeetingDate(LocalDate date) {
-        return !date.isBefore(LocalDate.now());
     }
 }
