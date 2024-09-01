@@ -95,6 +95,7 @@ public class BoardControllerTest {
 
         Long BoardId = Long.parseLong(Paths.get(new URI(url).getPath()).getFileName().toString());
 
+
         given()
                 .when()
                 .get("/api/boards/{boardId}", BoardId)
