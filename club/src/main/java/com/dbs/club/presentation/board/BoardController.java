@@ -1,5 +1,6 @@
 package com.dbs.club.presentation.board;
 
+import com.dbs.club.domain.board.Board;
 import com.dbs.club.domain.board.BoardService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -41,5 +42,12 @@ public class BoardController {
     ){
         boardService.updateBoard(request, boardId);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/{boardId}")
+    public ResponseEntity<BoardResponseDto.Detail> getBoard(@PathVariable Long boardId){
+        Board board = boardService.getBoard(boardId);
+        BoardResponseDto.Detail response = BoardResponseDto.Detail.fromEntity(board);
+        return ResponseEntity.ok(response);
     }
 }
