@@ -3,6 +3,9 @@ package com.dbs.club.presentation.member;
 import static io.restassured.RestAssured.*;
 import static org.hamcrest.Matchers.*;
 
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.nio.file.Paths;
 import java.time.LocalDate;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -183,5 +186,34 @@ public class MemberControllerTest {
             .put(url)
             .then()
             .statusCode(HttpStatus.BAD_REQUEST.value());
+    }
+
+    @Test
+    void getMember_Success() throws URISyntaxException {
+        String url = MemberControllerTestFixture.createMemberFixture();
+
+        Long memberId = Long.parseLong(Paths.get(new URI(url).getPath()).getFileName().toString());
+
+        given()
+            .when()
+            .get("/api/members/{memberId}", memberId)
+            .then()
+            .statusCode(HttpStatus.OK.value())
+            .body("loginId", startsWith("user"))
+            .body("name", equalTo(MemberControllerTestFixture.NAME))
+            .body("contact", equalTo(MemberControllerTestFixture.CONTACT))
+            .body("nickname", startsWith("nickName"))
+            .body("birth", equalTo(MemberControllerTestFixture.BIRTH.toString()))
+            .body("gender", equalTo("FEMALE"))
+            .body("interest", equalTo(MemberControllerTestFixture.INTEREST));
+    }
+
+    @Test
+    void getMember_Fail_404() {
+        given()
+            .when()
+            .get("/api/members/{memberId}", 100)
+            .then()
+            .statusCode(HttpStatus.NOT_FOUND.value());
     }
 }
