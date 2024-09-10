@@ -87,4 +87,31 @@ public class MeetingControllerTest {
                 .statusCode(HttpStatus.NOT_FOUND.value());
     }
 
+    @Test
+    void deleteMeeting_Success() {
+        String memberUrl = MemberControllerTestFixture.createMemberFixture();
+        Long memberId = Long.parseLong(memberUrl.substring(memberUrl.lastIndexOf("/") + 1));
+
+        String url = MeetingControllerTestFixture.createMeetingFixture(memberId);
+
+        given()
+                .contentType(ContentType.JSON)
+                .when()
+                .delete(url)
+                .then()
+                .statusCode(HttpStatus.NO_CONTENT.value());
+    }
+
+    @Test
+    void deleteMeeting_Fail_404() {
+        long meetingId = 99L;
+
+        given()
+                .contentType(ContentType.JSON)
+                .when()
+                .delete("/api/meetings/" + meetingId)
+                .then()
+                .statusCode(HttpStatus.NOT_FOUND.value());
+    }
+
 }
