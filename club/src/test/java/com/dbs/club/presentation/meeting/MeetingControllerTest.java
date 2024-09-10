@@ -31,13 +31,13 @@ public class MeetingControllerTest {
         Long memberId = Long.parseLong(memberUrl.substring(memberUrl.lastIndexOf("/") + 1));
 
         MeetingRequestDto.Create createRequest =
-                new MeetingRequestDto.Create (memberId, "testTitle", "testContent", "testLocation", LocalDate.of(2024, 9, 1), 5);
+                new MeetingRequestDto.Create (memberId, "testTitle", "testContent", "구로구 구로동", LocalDate.of(2024, 9, 1), 5);
 
         given()
                 .contentType(ContentType.JSON)
                 .body(createRequest)
                 .when()
-                .post("/api/meeting")
+                .post("/api/meetings")
                 .then()
                 .statusCode(201);
     }
