@@ -50,8 +50,8 @@ public class BoardControllerTest {
         String memberUrl = MemberControllerTestFixture.createMemberFixture();
         Long memberId = Long.parseLong(memberUrl.substring(memberUrl.lastIndexOf("/") + 1));
 
-        String url = BoardControllerTestFixture.createBoardFixture(memberId);
-        Long boardId = Long.parseLong(url.substring(url.lastIndexOf("/") + 1));
+        String boardurl = BoardControllerTestFixture.createBoardFixture(memberId);
+        Long boardId = Long.parseLong(boardurl.substring(boardurl.lastIndexOf("/") + 1));
 
         BoardRequestDto.Update request = new BoardRequestDto.Update(
                 boardId,
@@ -91,9 +91,9 @@ public class BoardControllerTest {
     void getBoard_Success() throws URISyntaxException {
         String memberUrl = MemberControllerTestFixture.createMemberFixture();
         Long memberId = Long.parseLong(memberUrl.substring(memberUrl.lastIndexOf("/") + 1));
-        String url = BoardControllerTestFixture.createBoardFixture(memberId);
 
-        Long BoardId = Long.parseLong(Paths.get(new URI(url).getPath()).getFileName().toString());
+        String boardurl = BoardControllerTestFixture.createBoardFixture(memberId);
+        Long BoardId = Long.parseLong(Paths.get(new URI(boardurl).getPath()).getFileName().toString());
 
 
         given()
@@ -113,4 +113,29 @@ public class BoardControllerTest {
                 .then()
                 .statusCode(HttpStatus.NOT_FOUND.value());
     }
+    @Test
+    void deleteBoard_Success() {
+        String memberUrl = MemberControllerTestFixture.createMemberFixture();
+        Long memberId = Long.parseLong(memberUrl.substring(memberUrl.lastIndexOf("/") + 1));
+
+        String boardurl = BoardControllerTestFixture.createBoardFixture(memberId);
+        Long boardId = Long.parseLong(boardurl.substring(boardurl.lastIndexOf("/") + 1));
+
+        given()
+                .when()
+                .delete("/api/boards/{boardId}", boardId)
+                .then()
+                .statusCode(HttpStatus.NO_CONTENT.value());
+    }
+    @Test
+    void deleteBoard_Fail_404() {
+        long boardId = 999L;
+
+        given()
+                .when()
+                .delete("/api/boards/{boardId}", boardId)
+                .then()
+                .statusCode(HttpStatus.NOT_FOUND.value());
+    }
+
 }
