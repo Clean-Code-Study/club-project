@@ -50,4 +50,11 @@ public class BoardController {
         BoardResponseDto.Detail response = BoardResponseDto.Detail.fromEntity(board);
         return ResponseEntity.ok(response);
     }
+
+    public ResponseEntity<Void> deleteBoard(
+            @PathVariable Long boardId
+    ) {
+        boardService.deleteBoard(boardId);
+        return ResponseEntity.noContent().build();
+    }
 }
