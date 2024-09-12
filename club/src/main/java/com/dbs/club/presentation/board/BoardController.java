@@ -52,7 +52,7 @@ public class BoardController {
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @PatchMapping("/{boardId}")
+    @DeleteMapping("/{boardId}")
     public ResponseEntity<Void> deleteBoard(
             @PathVariable Long boardId
     ) {

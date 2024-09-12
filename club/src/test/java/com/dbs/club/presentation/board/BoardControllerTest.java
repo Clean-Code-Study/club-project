@@ -113,4 +113,28 @@ public class BoardControllerTest {
                 .then()
                 .statusCode(HttpStatus.NOT_FOUND.value());
     }
+    @Test
+    void deleteBoard_Success() {
+        String memberUrl = MemberControllerTestFixture.createMemberFixture();
+        Long memberId = Long.parseLong(memberUrl.substring(memberUrl.lastIndexOf("/") + 1));
+
+        String boardurl = BoardControllerTestFixture.createBoardFixture(memberId);
+        Long boardId = Long.parseLong(boardurl.substring(boardurl.lastIndexOf("/") + 1));
+
+        given()
+                .when()
+                .delete("/api/boards/{boardId}", boardId)
+                .then()
+                .statusCode(HttpStatus.NO_CONTENT.value());
+    }
+    @Test
+    void deleteBoard_Fail_404() {
+        long boardId = 999L;
+
+        given()
+                .when()
+                .delete("/api/boards/{boardId}", boardId)
+                .then()
+                .statusCode(HttpStatus.NOT_FOUND.value());
+    }
 }
