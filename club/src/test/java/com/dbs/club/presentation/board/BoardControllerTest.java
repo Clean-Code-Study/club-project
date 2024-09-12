@@ -34,7 +34,7 @@ public class BoardControllerTest {
         Long memberId = Long.parseLong(memberUrl.substring(memberUrl.lastIndexOf("/") + 1));
 
         BoardRequestDto.Create createRequest =
-                new BoardRequestDto.Create (memberId, "testTitle", "testContent");
+                new BoardRequestDto.Create(memberId, "testTitle", "testContent");
 
         given()
                 .contentType(ContentType.JSON)
@@ -113,6 +113,7 @@ public class BoardControllerTest {
                 .then()
                 .statusCode(HttpStatus.NOT_FOUND.value());
     }
+
     @Test
     void deleteBoard_Success() {
         String memberUrl = MemberControllerTestFixture.createMemberFixture();
@@ -127,6 +128,7 @@ public class BoardControllerTest {
                 .then()
                 .statusCode(HttpStatus.NO_CONTENT.value());
     }
+
     @Test
     void deleteBoard_Fail_404() {
         long boardId = 999L;
