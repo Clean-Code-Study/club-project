@@ -88,4 +88,8 @@ public class Member extends BaseEntity {
         this.birth = birth;
         this.interest = interest;
     }
+
+    public void delete() {
+        this.status = MemberStatus.DELETED;
+    }
 }
