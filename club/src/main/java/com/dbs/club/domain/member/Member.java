@@ -3,7 +3,6 @@ package com.dbs.club.domain.member;
 import java.time.LocalDate;
 
 import com.dbs.club.domain.common.BaseEntity;
-import com.dbs.club.domain.common.RegisterDeleteState;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -59,10 +58,10 @@ public class Member extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false, length = 30)
-    private RegisterDeleteState status;
+    private MemberStatus status;
 
     public Member(String loginId, String password, String name, String contact, String nickname, LocalDate birth,
-        MemberGenderType gender, String interest, RegisterDeleteState status) {
+        MemberGenderType gender, String interest, MemberStatus status) {
         this.loginId = loginId;
         this.password = password;
         this.name = name;
