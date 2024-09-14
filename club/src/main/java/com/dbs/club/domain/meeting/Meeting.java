@@ -72,4 +72,9 @@ public class Meeting extends BaseEntity {
     public boolean canNotUpdateMeetingDate() {
         return this.date.isBefore(LocalDate.now());
     }
+
+    public void delete(
+    ) {
+        this.status = MeetingState.DELETED;
+    }
 }

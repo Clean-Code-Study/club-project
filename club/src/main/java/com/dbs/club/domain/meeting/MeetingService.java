@@ -47,7 +47,7 @@ public class MeetingService {
     }
 
     @Transactional
-    public  void updateMeeting(MeetingRequestDto.Update request, Long meetingId) {
+    public void updateMeeting(MeetingRequestDto.Update request, Long meetingId) {
         Meeting meeting = getMeeting(meetingId);
 
         if (meeting.canNotUpdateMeetingDate()) {
@@ -61,5 +61,12 @@ public class MeetingService {
                 request.date(),
                 request.joinLimit()
         );
+    }
+
+    @Transactional
+    public void deleteMeeting(Long meetingId) {
+        Meeting meeting = getMeeting(meetingId);
+
+        meeting.delete();
     }
 }
