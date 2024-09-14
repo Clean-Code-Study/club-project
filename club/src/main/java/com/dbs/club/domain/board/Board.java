@@ -42,4 +42,8 @@ public class Board extends BaseEntity {
         this.title = title;
         this.content = content;
     }
+
+    public void delete() {
+        this.status = RegisterDeleteState.DELETED;
+    }
 }

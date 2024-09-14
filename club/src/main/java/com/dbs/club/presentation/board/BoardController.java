@@ -50,4 +50,13 @@ public class BoardController {
         BoardResponseDto.Detail response = BoardResponseDto.Detail.fromEntity(board);
         return ResponseEntity.ok(response);
     }
+
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @DeleteMapping("/{boardId}")
+    public ResponseEntity<Void> deleteBoard(
+            @PathVariable Long boardId
+    ) {
+        boardService.deleteBoard(boardId);
+        return ResponseEntity.noContent().build();
+    }
 }
