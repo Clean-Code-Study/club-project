@@ -55,6 +55,7 @@ public class Meeting extends BaseEntity {
         this.joinCount = joinCount;
     }
 
+
     public void update(
             String title,
             String content,
@@ -77,4 +78,5 @@ public class Meeting extends BaseEntity {
     ) {
         this.status = MeetingState.DELETED;
     }
+
 }

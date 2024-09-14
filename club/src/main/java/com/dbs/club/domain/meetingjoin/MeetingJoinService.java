@@ -9,8 +9,13 @@ import com.dbs.club.domain.member.Member;
 import com.dbs.club.domain.member.MemberService;
 import com.dbs.club.infrastructure.meetingjoin.MeetingJoinRepository;
 import com.dbs.club.presentation.meetingjoin.MeetingJoinRequestDto;
+import com.dbs.club.presentation.meetingjoin.MeetingJoinResponseDto;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.PathVariable;
 
 @Service
 public class MeetingJoinService {
@@ -79,4 +84,13 @@ public class MeetingJoinService {
         return MeetingJoinState.JOIN == meetingJoinOldStatus && MeetingState.FULL == meetingOldStatus;
     }
 
+    public Page<MeetingJoinResponseDto.List> getMeetingJoin(@PathVariable Long memberId, int page) {
+        Member member = memberService.getMember(memberId);
+        Pageable pageable = PageRequest.of(page, 3);
+        Page<MeetingJoin> meetingJoinPage = meetingJoinRepository.findByMemberId(member.getId(), pageable);
+        return meetingJoinPage.map(meetingJoin -> {
+            Meeting meeting = meetingJoin.getMeeting();
+            return MeetingJoinResponseDto.List.fromEntity(meetingJoin, meeting);
+        });
+    }
 }

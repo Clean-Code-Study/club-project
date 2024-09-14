@@ -18,6 +18,7 @@ import java.time.LocalDate;
 
 import static io.restassured.RestAssured.given;
 
+
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class MeetingJoinControllerTest {
 
@@ -105,4 +106,35 @@ public class MeetingJoinControllerTest {
                 .then()
                 .statusCode(HttpStatus.BAD_REQUEST.value());
     }
+
+    @Test
+    void getMeetingJoin_Success() {
+        String memberUrl = MemberControllerTestFixture.createMemberFixture();
+        Long memberId = Long.parseLong(memberUrl.substring(memberUrl.lastIndexOf("/") + 1));
+
+        String meetingUrl = MeetingControllerTestFixture.createMeetingFixture(memberId);
+        Long meetingId = Long.parseLong(meetingUrl.substring(meetingUrl.lastIndexOf("/") + 1));
+
+        String meetingJoinUrl = MeetingJoinControllerTestFixture.createMeetingJoinFixture(memberId, meetingId);
+
+        given()
+                .when()
+                .get("/api/meeting-joins/{memberId}", memberId)
+                .then()
+                .log().all()
+                .statusCode(HttpStatus.OK.value());
+    }
+
+    @Test
+    void getMeetingJoin_Fail_404() {
+
+        Long memberId = -1L;
+
+        given()
+                .when()
+                .get("/api/meeting-joins/{memberId}", memberId)
+                .then()
+                .statusCode(HttpStatus.NOT_FOUND.value());
+    }
+
 }
