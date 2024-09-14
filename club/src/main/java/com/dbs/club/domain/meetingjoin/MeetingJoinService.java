@@ -15,6 +15,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.PathVariable;
 
 @Service
 public class MeetingJoinService {
@@ -83,9 +84,10 @@ public class MeetingJoinService {
         return MeetingJoinState.JOIN == meetingJoinOldStatus && MeetingState.FULL == meetingOldStatus;
     }
 
-    public Page<MeetingJoinResponseDto.List> getMeetingJoin(Long memberId, int page) {
+    public Page<MeetingJoinResponseDto.List> getMeetingJoin(@PathVariable Long memberId, int page) {
+        Member member = memberService.getMember(memberId);
         Pageable pageable = PageRequest.of(page, 3);
-        Page<MeetingJoin> meetingJoinPage = meetingJoinRepository.findByMemberId(memberId, pageable);
+        Page<MeetingJoin> meetingJoinPage = meetingJoinRepository.findByMemberId(member.getId(), pageable);
         return meetingJoinPage.map(meetingJoin -> {
             Meeting meeting = meetingJoin.getMeeting();
             return MeetingJoinResponseDto.List.fromEntity(meetingJoin, meeting);

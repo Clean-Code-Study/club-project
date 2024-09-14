@@ -45,9 +45,9 @@ public class MeetingJoinController {
     }
 
     @GetMapping("/{memberId}")
-    public ResponseEntity<Page<MeetingJoinResponseDto.List>> getMeetingJoin(@PathVariable Long memberId,@RequestParam(defaultValue = "0") int page) {
-        Member member = memberService.getMember(memberId);
-        Page<MeetingJoinResponseDto.List> meetingJoin = meetingJoinService.getMeetingJoin(member.getId(), page);
+    public ResponseEntity<Page<MeetingJoinResponseDto.List>> getMeetingJoin(@PathVariable Long memberId,
+                                                                            @RequestParam(defaultValue = "0") int page) {
+        Page<MeetingJoinResponseDto.List> meetingJoin = meetingJoinService.getMeetingJoin(memberId, page);
         return ResponseEntity.ok(meetingJoin);
     }
 
