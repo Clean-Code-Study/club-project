@@ -6,6 +6,8 @@ import java.net.URI;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import com.dbs.club.domain.member.Member;
 import com.dbs.club.domain.member.MemberService;
 
 import jakarta.validation.Valid;
@@ -47,6 +50,22 @@ public class MemberController {
         @Valid @RequestBody MemberRequestDto.Update request
     ) {
         memberService.updateMember(request, memberId);
+        return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/{memberId}")
+    public ResponseEntity<MemberResponseDto.Detail> getMember(@PathVariable Long memberId) {
+        Member member = memberService.getMember(memberId);
+        MemberResponseDto.Detail response = MemberResponseDto.Detail.fromEntity(member);
+        return ResponseEntity.ok(response);
+    }
+
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @DeleteMapping("/{memberId}")
+    public ResponseEntity<Void> deleteMember(
+        @PathVariable Long memberId
+    ) {
+        memberService.deleteMember(memberId);
         return ResponseEntity.noContent().build();
     }
 }

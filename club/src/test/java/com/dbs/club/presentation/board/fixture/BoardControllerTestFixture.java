@@ -6,7 +6,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 
 import java.net.URI;
-import java.util.UUID;
 
 import static io.restassured.RestAssured.given;
 
@@ -15,13 +14,11 @@ public class BoardControllerTestFixture {
     public static final String CONTENT = "내용입니다";
 
     public static String createBoardFixture(Long memberId) {
-        String uniqueTitle = TITLE + UUID.randomUUID().toString().substring(0, 8);
-        String uniqueContent = CONTENT + " " + UUID.randomUUID().toString().substring(0, 8);
 
         BoardRequestDto.Create request = new BoardRequestDto.Create(
                 memberId,
-                uniqueTitle,
-                uniqueContent
+                TITLE,
+                CONTENT
         );
 
         String location = given()

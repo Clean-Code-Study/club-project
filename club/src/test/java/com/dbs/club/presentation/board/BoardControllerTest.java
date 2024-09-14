@@ -10,7 +10,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.nio.file.Paths;
+
 import static io.restassured.RestAssured.given;
+import static org.hamcrest.Matchers.equalTo;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class BoardControllerTest {
@@ -29,7 +34,7 @@ public class BoardControllerTest {
         Long memberId = Long.parseLong(memberUrl.substring(memberUrl.lastIndexOf("/") + 1));
 
         BoardRequestDto.Create createRequest =
-                new BoardRequestDto.Create (memberId, "testTitle", "testContent");
+                new BoardRequestDto.Create(memberId, "testTitle", "testContent");
 
         given()
                 .contentType(ContentType.JSON)
@@ -78,6 +83,59 @@ public class BoardControllerTest {
                 .body(request)
                 .when()
                 .patch("/api/boards/" + BoardId)
+                .then()
+                .statusCode(HttpStatus.NOT_FOUND.value());
+    }
+
+    @Test
+    void getBoard_Success() throws URISyntaxException {
+        String memberUrl = MemberControllerTestFixture.createMemberFixture();
+        Long memberId = Long.parseLong(memberUrl.substring(memberUrl.lastIndexOf("/") + 1));
+        String url = BoardControllerTestFixture.createBoardFixture(memberId);
+
+        Long BoardId = Long.parseLong(Paths.get(new URI(url).getPath()).getFileName().toString());
+
+
+        given()
+                .when()
+                .get("/api/boards/{boardId}", BoardId)
+                .then()
+                .statusCode(HttpStatus.OK.value())
+                .body("title", equalTo(BoardControllerTestFixture.TITLE))
+                .body("content", equalTo(BoardControllerTestFixture.CONTENT));
+    }
+
+    @Test
+    void getBoard_Fail_404() {
+        given()
+                .when()
+                .get("/api/boards/{boardId}", 100)
+                .then()
+                .statusCode(HttpStatus.NOT_FOUND.value());
+    }
+
+    @Test
+    void deleteBoard_Success() {
+        String memberUrl = MemberControllerTestFixture.createMemberFixture();
+        Long memberId = Long.parseLong(memberUrl.substring(memberUrl.lastIndexOf("/") + 1));
+
+        String boardurl = BoardControllerTestFixture.createBoardFixture(memberId);
+        Long boardId = Long.parseLong(boardurl.substring(boardurl.lastIndexOf("/") + 1));
+
+        given()
+                .when()
+                .delete("/api/boards/{boardId}", boardId)
+                .then()
+                .statusCode(HttpStatus.NO_CONTENT.value());
+    }
+
+    @Test
+    void deleteBoard_Fail_404() {
+        long boardId = 999L;
+
+        given()
+                .when()
+                .delete("/api/boards/{boardId}", boardId)
                 .then()
                 .statusCode(HttpStatus.NOT_FOUND.value());
     }

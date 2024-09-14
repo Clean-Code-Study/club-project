@@ -12,7 +12,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import com.dbs.club.domain.common.RegisterDeleteState;
 import com.dbs.club.domain.member.exception.MemberException;
 import com.dbs.club.infrastructure.member.MemberRepository;
 import com.dbs.club.presentation.member.MemberRequestDto;
@@ -47,7 +46,7 @@ public class MemberServiceTest {
 
         Member duplicatedMember = new Member(
             duplicatedLoginId, "password@123", "테스트이름", "01012345678", "testNickname",
-            LocalDate.of(1990, 1, 1), MemberGenderType.MALE, "music", RegisterDeleteState.REGISTERED
+            LocalDate.of(1990, 1, 1), MemberGenderType.MALE, "music", MemberStatus.REGISTERED
         );
 
         // When
@@ -76,7 +75,7 @@ public class MemberServiceTest {
 
         Member duplicatedMember = new Member(
             "user123", "password@123", "테스트이름", "01012345678", duplicatedNickname,
-            LocalDate.of(1990, 1, 1), MemberGenderType.MALE, "music", RegisterDeleteState.REGISTERED
+            LocalDate.of(1990, 1, 1), MemberGenderType.MALE, "music", MemberStatus.REGISTERED
         );
 
         // When

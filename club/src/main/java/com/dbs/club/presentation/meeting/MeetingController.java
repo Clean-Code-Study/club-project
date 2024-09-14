@@ -3,6 +3,7 @@ package com.dbs.club.presentation.meeting;
 import com.dbs.club.domain.meeting.MeetingService;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -39,5 +40,24 @@ public class MeetingController {
     public ResponseEntity<Page<MeetingResponseDto.List>> getMeetings(@RequestParam(defaultValue = "0") int page) {
         Page<MeetingResponseDto.List> meetings = meetingService.getMeetings(page);
         return ResponseEntity.ok(meetings);
+    }
+
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PutMapping("/{meetingId}")
+    public ResponseEntity<Void> updateMeeting(
+            @PathVariable Long meetingId,
+            @Valid @RequestBody MeetingRequestDto.Update request
+    ) {
+        meetingService.updateMeeting(request, meetingId);
+        return ResponseEntity.noContent().build();
+    }
+
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @DeleteMapping("/{meetingId}")
+    public ResponseEntity<Void> deleteMeeting(
+            @PathVariable Long meetingId
+    ) {
+        meetingService.deleteMeeting(meetingId);
+        return ResponseEntity.noContent().build();
     }
 }

@@ -55,4 +55,28 @@ public class Meeting extends BaseEntity {
         this.joinCount = joinCount;
     }
 
+
+    public void update(
+            String title,
+            String content,
+            String location,
+            LocalDate date,
+            int joinLimit
+    ) {
+        this.title = title;
+        this.content = content;
+        this.location = location;
+        this.date = date;
+        this.joinLimit = joinLimit;
+    }
+
+    public boolean canNotUpdateMeetingDate() {
+        return this.date.isBefore(LocalDate.now());
+    }
+
+    public void delete(
+    ) {
+        this.status = MeetingState.DELETED;
+    }
+
 }
