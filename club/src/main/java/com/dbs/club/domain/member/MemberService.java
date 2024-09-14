@@ -47,6 +47,13 @@ public class MemberService {
         );
     }
 
+    @Transactional
+    public void deleteMember(Long memberId) {
+        Member member = getMember(memberId);
+
+        member.delete();
+    }
+
     private void validateDuplicateMember(Member member) {
         duplicateLoginIdCheck(member.getLoginId());
         duplicateNicknameCheck(member.getNickname());

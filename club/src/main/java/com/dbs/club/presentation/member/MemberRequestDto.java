@@ -2,9 +2,9 @@ package com.dbs.club.presentation.member;
 
 import java.time.LocalDate;
 
-import com.dbs.club.domain.common.RegisterDeleteState;
 import com.dbs.club.domain.member.Member;
 import com.dbs.club.domain.member.MemberGenderType;
+import com.dbs.club.domain.member.MemberStatus;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
@@ -48,7 +48,7 @@ public class MemberRequestDto {
                 .birth(this.birth)
                 .gender(this.gender)
                 .interest(this.interest)
-                .status(RegisterDeleteState.REGISTERED)
+                .status(MemberStatus.REGISTERED)
                 .build();
         }
     }

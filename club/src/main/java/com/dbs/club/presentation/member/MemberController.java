@@ -6,6 +6,7 @@ import java.net.URI;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -57,5 +58,14 @@ public class MemberController {
         Member member = memberService.getMember(memberId);
         MemberResponseDto.Detail response = MemberResponseDto.Detail.fromEntity(member);
         return ResponseEntity.ok(response);
+    }
+
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @DeleteMapping("/{memberId}")
+    public ResponseEntity<Void> deleteMember(
+        @PathVariable Long memberId
+    ) {
+        memberService.deleteMember(memberId);
+        return ResponseEntity.noContent().build();
     }
 }
