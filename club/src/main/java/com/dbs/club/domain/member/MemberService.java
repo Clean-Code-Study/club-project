@@ -1,10 +1,14 @@
 package com.dbs.club.domain.member;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.dbs.club.domain.board.Board;
 import com.dbs.club.domain.common.exception.ErrorCode;
 import com.dbs.club.domain.member.exception.MemberException;
+import com.dbs.club.infrastructure.board.BoardRepository;
 import com.dbs.club.infrastructure.member.MemberRepository;
 import com.dbs.club.presentation.member.MemberRequestDto;
 
@@ -15,6 +19,7 @@ import lombok.RequiredArgsConstructor;
 public class MemberService {
 
     private final MemberRepository memberRepository;
+    private final BoardRepository boardRepository;
 
     @Transactional
     public long createMember(MemberRequestDto.Create create) {
@@ -71,5 +76,9 @@ public class MemberService {
             .ifPresent(m -> {
                 throw new MemberException(ErrorCode.MEMBER_NICKNAME_DUPLICATE);
             });
+    }
+
+    public List<Board> getMyBoards(Long memberId) {
+        return boardRepository.findByMemberId(memberId);
     }
 }
