@@ -1,5 +1,6 @@
 package com.dbs.club.presentation.board;
 
+import com.dbs.club.domain.common.exception.ErrorCode;
 import com.dbs.club.presentation.board.fixture.BoardControllerTestFixture;
 import com.dbs.club.presentation.member.fixture.MemberControllerTestFixture;
 import io.restassured.RestAssured;
@@ -34,7 +35,7 @@ public class BoardControllerTest {
         Long memberId = Long.parseLong(memberUrl.substring(memberUrl.lastIndexOf("/") + 1));
 
         BoardRequestDto.Create createRequest =
-                new BoardRequestDto.Create (memberId, "testTitle", "testContent");
+                new BoardRequestDto.Create(memberId, "testTitle", "testContent");
 
         given()
                 .contentType(ContentType.JSON)
@@ -112,5 +113,119 @@ public class BoardControllerTest {
                 .get("/api/boards/{boardId}", 100)
                 .then()
                 .statusCode(HttpStatus.NOT_FOUND.value());
+    }
+
+    @Test
+    void deleteBoard_Success() {
+        String memberUrl = MemberControllerTestFixture.createMemberFixture();
+        Long memberId = Long.parseLong(memberUrl.substring(memberUrl.lastIndexOf("/") + 1));
+
+        String boardurl = BoardControllerTestFixture.createBoardFixture(memberId);
+        Long boardId = Long.parseLong(boardurl.substring(boardurl.lastIndexOf("/") + 1));
+
+        given()
+                .when()
+                .delete("/api/boards/{boardId}", boardId)
+                .then()
+                .statusCode(HttpStatus.NO_CONTENT.value());
+    }
+
+    @Test
+    void deleteBoard_Fail_404() {
+        long boardId = 999L;
+
+        given()
+                .when()
+                .delete("/api/boards/{boardId}", boardId)
+                .then()
+                .statusCode(HttpStatus.NOT_FOUND.value());
+    }
+
+    @Test
+    void createBoard_Profanity_Title() {
+        String memberUrl = MemberControllerTestFixture.createMemberFixture();
+        Long memberId = Long.parseLong(memberUrl.substring(memberUrl.lastIndexOf("/") + 1));
+
+        BoardRequestDto.Create createRequest = new BoardRequestDto.Create(
+                memberId,
+                "제목 욕설1",
+                "내용"
+        );
+
+        given()
+                .contentType(ContentType.JSON)
+                .body(createRequest)
+                .when()
+                .post("/api/boards")
+                .then()
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .body("message",equalTo(ErrorCode.PROFANITY_FOUND.getMessage()));
+    }
+
+    @Test
+    void createBoard_Profanity_Content() {
+        String memberUrl = MemberControllerTestFixture.createMemberFixture();
+        Long memberId = Long.parseLong(memberUrl.substring(memberUrl.lastIndexOf("/") + 1));
+
+        BoardRequestDto.Create createRequest = new BoardRequestDto.Create(
+                memberId,
+                "제목",
+                "내용 욕설2"
+        );
+
+        given()
+                .contentType(ContentType.JSON)
+                .body(createRequest)
+                .when()
+                .post("/api/boards")
+                .then()
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .body("message", equalTo(ErrorCode.PROFANITY_FOUND.getMessage()));
+    }
+
+    @Test
+    void updateBoard_Profanity_Title() {
+        String memberUrl = MemberControllerTestFixture.createMemberFixture();
+        Long memberId = Long.parseLong(memberUrl.substring(memberUrl.lastIndexOf("/") + 1));
+        String url = BoardControllerTestFixture.createBoardFixture(memberId);
+        Long boardId = Long.parseLong(url.substring(url.lastIndexOf("/") + 1));
+
+        BoardRequestDto.Update updateRequest = new BoardRequestDto.Update(
+                boardId,
+                "제목 욕설1",
+                " 내용"
+        );
+
+        given()
+                .contentType(ContentType.JSON)
+                .body(updateRequest)
+                .when()
+                .patch("/api/boards/" + boardId)
+                .then()
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .body("message", equalTo(ErrorCode.PROFANITY_FOUND.getMessage()));
+    }
+
+    @Test
+    void updateBoard_Profanity_Content() {
+        String memberUrl = MemberControllerTestFixture.createMemberFixture();
+        Long memberId = Long.parseLong(memberUrl.substring(memberUrl.lastIndexOf("/") + 1));
+        String url = BoardControllerTestFixture.createBoardFixture(memberId);
+        Long boardId = Long.parseLong(url.substring(url.lastIndexOf("/") + 1));
+
+        BoardRequestDto.Update updateRequest = new BoardRequestDto.Update(
+                boardId,
+                "제목",
+                "내용 욕설2 "
+        );
+
+        given()
+                .contentType(ContentType.JSON)
+                .body(updateRequest)
+                .when()
+                .patch("/api/boards/" + boardId)
+                .then()
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .body("message", equalTo(ErrorCode.PROFANITY_FOUND.getMessage()));
     }
 }
