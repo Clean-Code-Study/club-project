@@ -76,6 +76,10 @@ public class Meeting extends BaseEntity {
         return this.date.isBefore(LocalDate.now());
     }
 
+    public boolean isCreator(Long memberId) {
+        return this.member.getId().equals(memberId);
+    }
+
     public void delete(
     ) {
         this.status = MeetingState.DELETED;

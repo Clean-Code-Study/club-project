@@ -48,8 +48,12 @@ public class MeetingService {
     }
 
     @Transactional
-    public void updateMeeting(MeetingRequestDto.Update request, Long meetingId) {
+    public void updateMeeting(MeetingRequestDto.Update request, Long meetingId, Long memberId) {
         Meeting meeting = getMeeting(meetingId);
+
+        if (!meeting.isCreator(memberId)) {
+            throw new MeetingException(ErrorCode.MEETING_CAN_NOT_UPDATE);
+        }
 
         if (meeting.canNotUpdateMeetingDate()) {
            throw new MeetingException(ErrorCode.MEETING_CAN_NOT_UPDATE);
@@ -65,8 +69,12 @@ public class MeetingService {
     }
 
     @Transactional
-    public void deleteMeeting(Long meetingId) {
+    public void deleteMeeting(Long meetingId, Long memberId) {
         Meeting meeting = getMeeting(meetingId);
+
+        if (!meeting.isCreator(memberId)) {
+            throw new MeetingException(ErrorCode.MEETING_CAN_NOT_DELETE);
+        }
 
         meeting.getMeetingJoins().forEach(join -> join.updateStatus(MeetingJoinState.CANCEL));
 
