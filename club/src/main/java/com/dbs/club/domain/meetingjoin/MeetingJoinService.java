@@ -17,6 +17,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PathVariable;
 
+import java.time.LocalDate;
+
+import static com.dbs.club.domain.common.MeetingState.OPEN;
+
 @Service
 public class MeetingJoinService {
 
@@ -41,13 +45,27 @@ public class MeetingJoinService {
         Member member = memberService.getMember(create.memberId());
         Meeting meeting = meetingService.getMeeting(create.meetingId());
 
-        MeetingJoin meetingJoin = MeetingJoin.builder()
-                .member(member)
-                .meeting(meeting)
-                .status(MeetingJoinState.JOIN)
-                .build();
+        if(meetingJoinRepository.existsByMemberAndMeeting(member, meeting)) {
+            throw new MeetingJoinException(ErrorCode.DUPLICATE_MEETING_JOIN);
+        }
 
-        return meetingJoinRepository.save(meetingJoin).getId();
+        LocalDate meetingDate = meeting.getDate();
+        if (meetingJoinRepository.existsByMemberAndMeetingDate(member, meetingDate)) {
+            throw new MeetingJoinException(ErrorCode.DUPLICATE_DATE_MEETING_JOIN);
+        }
+
+
+        if(meeting.getStatus().equals(OPEN)) {
+            MeetingJoin meetingJoin = MeetingJoin.builder()
+                    .member(member)
+                    .meeting(meeting)
+                    .status(MeetingJoinState.JOIN)
+                    .build();
+
+            return meetingJoinRepository.save(meetingJoin).getId();
+        }
+
+        throw new MeetingJoinException(ErrorCode.MEETING_STATUS_NOT_OPEN);
     }
 
     @Transactional(readOnly = true)
@@ -57,14 +75,16 @@ public class MeetingJoinService {
     }
 
     @Transactional
-    public void cancelMeetingJoin(Long meetingJoinId) {
+    public void cancelMeetingJoin(Long meetingJoinId, Long memberId) {
 
         MeetingJoin meetingJoin = getMeetingJoin(meetingJoinId);
-
 
         if (meetingJoin.isMeetingDateBeforeToday()) {
             throw new MeetingJoinException(ErrorCode.MEETING_JOIN_CAN_NOT_CANCEL);
         }
+
+        Member member = memberService.getMember(memberId);
+
 
         MeetingJoinState meetingJoinOldStatus = meetingJoin.getStatus();
         MeetingState meetingOldStatus = meetingJoin.getMeeting().getStatus();
@@ -72,7 +92,7 @@ public class MeetingJoinService {
         meetingJoin.cancel();
 
         if (canUpdateMeetingStatus(meetingJoinOldStatus, meetingOldStatus)) {
-            meetingJoin.getMeeting().updateStatus(MeetingState.OPEN);
+            meetingJoin.getMeeting().updateStatus(OPEN);
         }
 
         meetingJoin.getMeeting().updateJoinCount(meetingJoin.getMeeting().getJoinCount() - DECREMENT_ONE);

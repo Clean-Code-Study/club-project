@@ -39,8 +39,8 @@ public class MeetingJoinController {
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PatchMapping("/{meetingJoinId}")
-    public ResponseEntity<Void> cancelMeeting(@PathVariable Long meetingJoinId) {
-        meetingJoinService.cancelMeetingJoin(meetingJoinId);
+    public ResponseEntity<Void> cancelMeeting(@PathVariable Long meetingJoinId, @RequestParam Long memberId) {
+        meetingJoinService.cancelMeetingJoin(meetingJoinId, memberId);
         return ResponseEntity.noContent().build();
     }
 
