@@ -3,6 +3,7 @@ package com.dbs.club.presentation.member;
 import static com.dbs.club.presentation.member.MemberController.*;
 
 import java.net.URI;
+import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import com.dbs.club.domain.board.Board;
 import com.dbs.club.domain.member.Member;
 import com.dbs.club.domain.member.MemberService;
 
@@ -67,5 +69,15 @@ public class MemberController {
     ) {
         memberService.deleteMember(memberId);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/{memberId}/boards")
+    public ResponseEntity<List<MemberResponseDto.MyBoard>> getMyBoards(@PathVariable Long memberId) {
+        List<Board> boards = memberService.getMyBoards(memberId);
+        List<MemberResponseDto.MyBoard> response = boards.stream()
+            .map(MemberResponseDto.MyBoard::fromEntity)
+            .toList();
+
+        return ResponseEntity.ok(response);
     }
 }
