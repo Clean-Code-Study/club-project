@@ -46,18 +46,20 @@ public class MeetingController {
     @PutMapping("/{meetingId}")
     public ResponseEntity<Void> updateMeeting(
             @PathVariable Long meetingId,
-            @Valid @RequestBody MeetingRequestDto.Update request
+            @Valid @RequestBody MeetingRequestDto.Update request,
+            @RequestParam Long memberId
     ) {
-        meetingService.updateMeeting(request, meetingId);
+        meetingService.updateMeeting(request, meetingId, memberId);
         return ResponseEntity.noContent().build();
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/{meetingId}")
     public ResponseEntity<Void> deleteMeeting(
-            @PathVariable Long meetingId
+            @PathVariable Long meetingId,
+            @RequestParam Long memberId
     ) {
-        meetingService.deleteMeeting(meetingId);
+        meetingService.deleteMeeting(meetingId, memberId);
         return ResponseEntity.noContent().build();
     }
 }

@@ -39,4 +39,8 @@ public class MeetingJoin extends BaseEntity {
         return this.getMeeting().getDate().isBefore(LocalDate.now());
     }
 
+    public void updateStatus(MeetingJoinState status) {
+        this.status = status;
+    }
+
 }
