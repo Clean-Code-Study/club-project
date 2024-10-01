@@ -3,6 +3,7 @@ package com.dbs.club.domain.meeting;
 
 import com.dbs.club.domain.common.exception.ErrorCode;
 import com.dbs.club.domain.meeting.exception.MeetingException;
+import com.dbs.club.domain.meetingjoin.MeetingJoinState;
 import com.dbs.club.domain.member.Member;
 import com.dbs.club.domain.member.MemberService;
 import com.dbs.club.infrastructure.meeting.MeetingRepository;
@@ -66,6 +67,8 @@ public class MeetingService {
     @Transactional
     public void deleteMeeting(Long meetingId) {
         Meeting meeting = getMeeting(meetingId);
+
+        meeting.getMeetingJoins().forEach(join -> join.updateStatus(MeetingJoinState.CANCEL));
 
         meeting.delete();
     }

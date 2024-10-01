@@ -2,11 +2,13 @@ package com.dbs.club.domain.meeting;
 
 import com.dbs.club.domain.common.BaseEntity;
 import com.dbs.club.domain.common.MeetingState;
+import com.dbs.club.domain.meetingjoin.MeetingJoin;
 import com.dbs.club.domain.member.Member;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Getter
 @Builder
@@ -77,6 +79,13 @@ public class Meeting extends BaseEntity {
     public void delete(
     ) {
         this.status = MeetingState.DELETED;
+    }
+
+    @OneToMany(mappedBy = "meeting", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<MeetingJoin> meetingJoins;
+
+    public List<MeetingJoin> getMeetingJoins() {
+        return meetingJoins;
     }
 
 }
