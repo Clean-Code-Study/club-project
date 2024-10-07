@@ -45,27 +45,28 @@ public class MeetingJoinService {
         Member member = memberService.getMember(create.memberId());
         Meeting meeting = meetingService.getMeeting(create.meetingId());
 
+
         if(meetingJoinRepository.existsByMemberAndMeeting(member, meeting)) {
-            throw new MeetingJoinException(ErrorCode.DUPLICATE_MEETING_JOIN);
+            throw new MeetingJoinException(ErrorCode.MEETING_JOIN_DUPLICATE);
         }
 
         LocalDate meetingDate = meeting.getDate();
         if (meetingJoinRepository.existsByMemberAndMeetingDate(member, meetingDate)) {
-            throw new MeetingJoinException(ErrorCode.DUPLICATE_DATE_MEETING_JOIN);
+            throw new MeetingJoinException(ErrorCode.MEETING_JOIN_DATE_DUPLICATE);
         }
 
-
-        if(meeting.getStatus().equals(OPEN)) {
-            MeetingJoin meetingJoin = MeetingJoin.builder()
-                    .member(member)
-                    .meeting(meeting)
-                    .status(MeetingJoinState.JOIN)
-                    .build();
-
-            return meetingJoinRepository.save(meetingJoin).getId();
+        if(meeting.getStatus().isNotOpen()) {
+            throw new MeetingJoinException(ErrorCode.MEETING_STATUS_NOT_OPEN);
         }
 
-        throw new MeetingJoinException(ErrorCode.MEETING_STATUS_NOT_OPEN);
+        MeetingJoin meetingJoin = MeetingJoin.builder()
+                .member(member)
+                .meeting(meeting)
+                .status(MeetingJoinState.JOIN)
+                .build();
+
+        return meetingJoinRepository.save(meetingJoin).getId();
+
     }
 
     @Transactional(readOnly = true)
@@ -76,15 +77,15 @@ public class MeetingJoinService {
 
     @Transactional
     public void cancelMeetingJoin(Long meetingJoinId, Long memberId) {
-
         MeetingJoin meetingJoin = getMeetingJoin(meetingJoinId);
 
         if (meetingJoin.isMeetingDateBeforeToday()) {
             throw new MeetingJoinException(ErrorCode.MEETING_JOIN_CAN_NOT_CANCEL);
         }
 
-        Member member = memberService.getMember(memberId);
-
+        if (!meetingJoin.getMember().getId().equals(memberId)) {
+            throw new MeetingJoinException(ErrorCode.MEETING_JOIN_PERMISSION_DENIED);
+        }
 
         MeetingJoinState meetingJoinOldStatus = meetingJoin.getStatus();
         MeetingState meetingOldStatus = meetingJoin.getMeeting().getStatus();
@@ -100,6 +101,7 @@ public class MeetingJoinService {
         meetingJoinRepository.save(meetingJoin);
     }
 
+
     private boolean canUpdateMeetingStatus(MeetingJoinState meetingJoinOldStatus, MeetingState meetingOldStatus) {
         return MeetingJoinState.JOIN == meetingJoinOldStatus && MeetingState.FULL == meetingOldStatus;
     }
@@ -113,4 +115,5 @@ public class MeetingJoinService {
             return MeetingJoinResponseDto.List.fromEntity(meetingJoin, meeting);
         });
     }
+
 }

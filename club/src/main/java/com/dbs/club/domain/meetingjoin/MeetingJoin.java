@@ -39,8 +39,4 @@ public class MeetingJoin extends BaseEntity {
         return this.getMeeting().getDate().isBefore(LocalDate.now());
     }
 
-    public boolean isNotYourMeetingJoin(Long member) {
-        return !this.getMeeting().getMember().getId().equals(member);
-    }
-
 }
