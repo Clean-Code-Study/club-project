@@ -16,6 +16,7 @@ public class BoardService {
     private final BoardRepository boardRepository;
     private final MemberService memberService;
 
+
     public BoardService(BoardRepository boardRepository, MemberService memberService) {
         this.boardRepository = boardRepository;
         this.memberService = memberService;
@@ -33,6 +34,8 @@ public class BoardService {
                 .status(RegisterDeleteState.REGISTERED)
                 .build();
 
+        board.checkProfanity();
+
         return boardRepository.save(board).getId();
     }
 
@@ -45,12 +48,14 @@ public class BoardService {
 
     @Transactional
     public void updateBoard(BoardRequestDto.Update request, Long boardId) {
+
         Board board = getBoard(boardId);
 
         board.update(
                 request.title(),
                 request.content()
         );
+
         boardRepository.save(board);
     }
 

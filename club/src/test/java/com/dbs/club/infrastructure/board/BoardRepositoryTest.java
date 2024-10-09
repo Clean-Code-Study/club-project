@@ -1,15 +1,14 @@
 package com.dbs.club.infrastructure.board;
 
-import java.time.LocalDate;
-
+import com.dbs.club.domain.member.Member;
+import com.dbs.club.domain.member.MemberGenderType;
+import com.dbs.club.domain.member.MemberStatus;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.dbs.club.domain.member.Member;
-import com.dbs.club.domain.member.MemberGenderType;
-import com.dbs.club.domain.member.MemberStatus;
+import java.time.LocalDate;
 
 @Transactional
 @SpringBootTest

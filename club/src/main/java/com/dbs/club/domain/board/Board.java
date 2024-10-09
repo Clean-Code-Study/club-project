@@ -1,11 +1,16 @@
 package com.dbs.club.domain.board;
 
+import com.dbs.club.domain.board.exception.BoardException;
 import com.dbs.club.domain.common.BaseEntity;
 import com.dbs.club.domain.common.RegisterDeleteState;
+import com.dbs.club.domain.common.exception.ErrorCode;
 import com.dbs.club.domain.member.Member;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
 import lombok.*;
+
+import java.util.Arrays;
+import java.util.List;
 
 @Builder
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
@@ -34,6 +39,15 @@ public class Board extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private RegisterDeleteState status;
 
+    private static final List<String> PROFANITYWORDS = Arrays.asList("욕설1", "욕설2", "욕설3");
+
+    public void checkProfanity() {
+        for (String profanity : PROFANITYWORDS) {
+            if (this.title.contains(profanity) || this.content.contains(profanity)) {
+                throw new BoardException(ErrorCode.BOARD_PROFANITY_FOUND);
+            }
+        }
+    }
 
     public void update(
             String title,
@@ -41,6 +55,8 @@ public class Board extends BaseEntity {
     ){
         this.title = title;
         this.content = content;
+        checkProfanity();
+
     }
 
     public void delete() {
