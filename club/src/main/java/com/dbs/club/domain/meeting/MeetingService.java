@@ -51,7 +51,7 @@ public class MeetingService {
     public void updateMeeting(MeetingRequestDto.Update request, Long meetingId, Long memberId) {
         Meeting meeting = getMeeting(meetingId);
 
-        if (!meeting.isCreator(memberId)) {
+        if (meeting.isNotCreator(memberId)) {
             throw new MeetingException(ErrorCode.MEETING_CAN_NOT_UPDATE);
         }
 
